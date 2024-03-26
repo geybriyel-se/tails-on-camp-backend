@@ -9,6 +9,7 @@ import com.geybriyel.tailsoncamp.security.AuthenticationResponse;
 import com.geybriyel.tailsoncamp.security.AuthenticationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,10 +41,12 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ApiResponse<AuthenticationResponse> login(@RequestBody LoginUserRequest request) {
-        AuthenticationResponse token = authenticationService.authenticate(request);
-        return new ApiResponse<>(StatusCode.SUCCESS, token);
+        try {
+            AuthenticationResponse token = authenticationService.authenticate(request);
+            return new ApiResponse<>(StatusCode.SUCCESS, token);
+        } catch (AuthenticationException exception) {
+            return new ApiResponse<>(StatusCode.INCORRECT_CREDENTIALS, null);
+        }
     }
-
-
 
 }

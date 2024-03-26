@@ -10,6 +10,8 @@ import com.geybriyel.tailsoncamp.service.impl.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,9 +57,18 @@ public class AuthenticationService {
                 )
         );
 
-        User user = userDetailsService.loadUserByUsername(request.getUsername());
-        String token = jwtService.generateToken(user);
+        try {
+            User user = userDetailsService.loadUserByUsername(request.getUsername());
+            String token = jwtService.generateToken(user);
+            return new AuthenticationResponse(token);
+        } catch (UsernameNotFoundException e) {
+            throw new AuthenticationException("Login failed. Please check your username and password.") {
+                @Override
+                public String getMessage() {
+                    return super.getMessage();
+                }
+            };
+        }
 
-        return new AuthenticationResponse(token);
     }
 }
