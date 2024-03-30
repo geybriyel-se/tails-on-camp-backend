@@ -2,16 +2,16 @@ package com.geybriyel.tailsoncamp.exception;
 
 import com.geybriyel.tailsoncamp.enums.StatusCode;
 import lombok.Getter;
-import org.springframework.security.core.AuthenticationException;
 
 @Getter
-public class UserRegistrationException extends AuthenticationException {
-
+public class InvalidUserFieldsException extends RuntimeException {
     private final StatusCode statusCode;
+    private final Object violations;
 
-    public UserRegistrationException(StatusCode statusCode) {
+    public InvalidUserFieldsException(StatusCode statusCode, Object violations) {
         super(statusCode.getMessage());
         this.statusCode = statusCode;
+        this.violations = violations;
     }
 
 }

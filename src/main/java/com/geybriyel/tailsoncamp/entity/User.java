@@ -1,7 +1,11 @@
 package com.geybriyel.tailsoncamp.entity;
 
+import com.geybriyel.tailsoncamp.annotations.UniqueUsername;
 import com.geybriyel.tailsoncamp.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,10 +23,17 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Email(message = "Please provide a valid email address.", regexp = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")
+    @NotBlank(message = "Email cannot be blank")
     private String email;
 
+    @NotBlank(message = "Username cannot be blank")
+    @Size(min = 5, max = 20, message = "Username must have 5 - 20 characters")
+//    @UniqueUsername
     private String username;
 
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
     private String firstName;

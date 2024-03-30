@@ -3,6 +3,7 @@ package com.geybriyel.tailsoncamp.service.impl;
 import com.geybriyel.tailsoncamp.entity.User;
 import com.geybriyel.tailsoncamp.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 
 public class ApiResponse<T> extends LinkedHashMap<String, Object> {
 
-    public ApiResponse(StatusCode statusCode, T body) {
+    public ApiResponse(StatusCode statusCode, Object body) {
         this.put("status", statusCode.getCode());
         this.put("message", statusCode.getMessage());
         this.put("body", body);
