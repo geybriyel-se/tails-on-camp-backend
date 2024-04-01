@@ -4,10 +4,10 @@ import com.geybriyel.tailsoncamp.dto.ApiResponse;
 import com.geybriyel.tailsoncamp.dto.LoginUserRequest;
 import com.geybriyel.tailsoncamp.dto.RegisterUserRequest;
 import com.geybriyel.tailsoncamp.enums.StatusCode;
-import com.geybriyel.tailsoncamp.exception.InvalidUserFieldsException;
-import com.geybriyel.tailsoncamp.exception.UserRegistrationException;
+import com.geybriyel.tailsoncamp.exception.ObjectNotValidException;
 import com.geybriyel.tailsoncamp.security.AuthenticationResponse;
 import com.geybriyel.tailsoncamp.security.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,14 +24,14 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ApiResponse<AuthenticationResponse> register(@RequestBody RegisterUserRequest request) {
+    public ApiResponse<AuthenticationResponse> register(@Valid @RequestBody RegisterUserRequest request) {
         try {
             AuthenticationResponse token = authenticationService.register(request);
             return new ApiResponse<>(StatusCode.USER_CREATED, token);
-        } catch (InvalidUserFieldsException exception) {
+        } catch (ObjectNotValidException exception) {
             return new ApiResponse<>(exception.getStatusCode(), exception.getViolations());
         }
-        catch (UserRegistrationException exception) {
+/*        catch (UserRegistrationException exception) {
             StatusCode exceptionStatusCode = exception.getStatusCode();
             if (exceptionStatusCode == StatusCode.EMAIL_NOT_UNIQUE || exceptionStatusCode == StatusCode.USERNAME_NOT_UNIQUE) {
                 return new ApiResponse<>(exceptionStatusCode, null);
@@ -39,7 +39,7 @@ public class AuthenticationController {
                 log.error("An unexpected error occurred during user registration", exception);
                 return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, null);
             }
-        }
+        }*/
     }
 
 
