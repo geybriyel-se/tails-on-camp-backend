@@ -1,7 +1,7 @@
 package com.geybriyel.tailsoncamp.entity;
 
-import com.geybriyel.tailsoncamp.annotations.UniqueUsername;
 import com.geybriyel.tailsoncamp.enums.Role;
+import com.geybriyel.tailsoncamp.utility.UserEntityListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,17 +11,21 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Data
 @Table(name = "user_details")
+@EntityListeners(UserEntityListener.class)
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "user_id")
+    private Long userId;
+
 
     @Email(message = "Please provide a valid email address.", regexp = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")
     @NotBlank(message = "Email cannot be blank")
@@ -43,6 +47,10 @@ public class User implements UserDetails {
     private String address;
 
     private String phoneNumber;
+
+    private Instant createdAt;
+
+    private Instant updatedAt;
 
     @Enumerated(value = EnumType.STRING)
     private Role role;

@@ -1,7 +1,7 @@
 package com.geybriyel.tailsoncamp.security;
 
-import com.geybriyel.tailsoncamp.dto.LoginUserRequest;
-import com.geybriyel.tailsoncamp.dto.RegisterUserRequest;
+import com.geybriyel.tailsoncamp.dto.LoginUserRequestDTO;
+import com.geybriyel.tailsoncamp.dto.RegisterUserRequestDTO;
 import com.geybriyel.tailsoncamp.entity.User;
 import com.geybriyel.tailsoncamp.enums.Role;
 import com.geybriyel.tailsoncamp.service.impl.UserDetailsServiceImpl;
@@ -27,7 +27,7 @@ public class AuthenticationService {
     private final ObjectsValidator<User> userValidator;
 
 
-    public AuthenticationResponse register(RegisterUserRequest request) {
+    public AuthenticationResponse register(RegisterUserRequestDTO request) {
         /*if (userDetailsService.isUsernameTaken(request.getUsername())) {
             throw new UserRegistrationException(StatusCode.USERNAME_NOT_UNIQUE);
         }
@@ -51,7 +51,7 @@ public class AuthenticationService {
         return new AuthenticationResponse(token);
     }
 
-    public AuthenticationResponse authenticate(LoginUserRequest request) {
+    public AuthenticationResponse authenticate(LoginUserRequestDTO request) {
         User user = userDetailsService.loadUserByUsername(request.getUsername());
 
         authenticationManager.authenticate(

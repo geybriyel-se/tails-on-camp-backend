@@ -3,7 +3,7 @@ package com.geybriyel.tailsoncamp.dto;
 import lombok.Data;
 
 @Data
-public class LoginUserRequest {
+public class LoginUserRequestDTO {
 
     private String username;
 

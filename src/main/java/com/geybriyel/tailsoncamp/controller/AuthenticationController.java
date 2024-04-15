@@ -1,8 +1,8 @@
 package com.geybriyel.tailsoncamp.controller;
 
 import com.geybriyel.tailsoncamp.dto.ApiResponse;
-import com.geybriyel.tailsoncamp.dto.LoginUserRequest;
-import com.geybriyel.tailsoncamp.dto.RegisterUserRequest;
+import com.geybriyel.tailsoncamp.dto.LoginUserRequestDTO;
+import com.geybriyel.tailsoncamp.dto.RegisterUserRequestDTO;
 import com.geybriyel.tailsoncamp.enums.StatusCode;
 import com.geybriyel.tailsoncamp.exception.ObjectNotValidException;
 import com.geybriyel.tailsoncamp.security.AuthenticationResponse;
@@ -24,7 +24,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ApiResponse<AuthenticationResponse> register(@Valid @RequestBody RegisterUserRequest request) {
+    public ApiResponse<AuthenticationResponse> register(@Valid @RequestBody RegisterUserRequestDTO request) {
         try {
             AuthenticationResponse token = authenticationService.register(request);
             return new ApiResponse<>(StatusCode.USER_CREATED, token);
@@ -44,7 +44,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/login")
-    public ApiResponse<AuthenticationResponse> login(@RequestBody LoginUserRequest request) {
+    public ApiResponse<AuthenticationResponse> login(@Valid @RequestBody LoginUserRequestDTO request) {
         try {
             AuthenticationResponse token = authenticationService.authenticate(request);
             return new ApiResponse<>(StatusCode.SUCCESS, token);
