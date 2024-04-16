@@ -113,6 +113,7 @@ public class ShelterController {
                 .contactNumber(shelter.getContactNumber())
                 .email(shelter.getEmail())
                 .website(shelter.getWebsite())
+                .createdAt(shelter.getCreatedAt())
                 .build();
     }
 

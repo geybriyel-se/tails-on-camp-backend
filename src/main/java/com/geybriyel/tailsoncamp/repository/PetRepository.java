@@ -4,6 +4,7 @@ import com.geybriyel.tailsoncamp.entity.Pet;
 import com.geybriyel.tailsoncamp.entity.Shelter;
 import com.geybriyel.tailsoncamp.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,5 +24,9 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
     List<Pet> findByBreed(String breed);
 
     Pet save(Pet pet);
+
+    @Query("SELECT DISTINCT breed FROM Pet")
+    List<String> findDistinctBreed();
+
 
 }

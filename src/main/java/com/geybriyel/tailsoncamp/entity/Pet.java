@@ -3,12 +3,9 @@ package com.geybriyel.tailsoncamp.entity;
 import com.geybriyel.tailsoncamp.utility.PetEntityListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
 import lombok.Data;
-import org.hibernate.annotations.Fetch;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -21,9 +18,10 @@ public class Pet {
     @Column(name = "pet_id")
     private Long id;
 
-//    @NotBlank(message = "Name must not be blank")
+    @NotBlank(message = "Name cannot be blank")
     private String name;
 
+    @NotBlank(message = "Type cannot be blank")
     private String type;
 
     private String breed;

@@ -5,13 +5,12 @@ import com.geybriyel.tailsoncamp.entity.Shelter;
 import com.geybriyel.tailsoncamp.entity.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface PetDetailsService {
 
     List<Pet> getAllPets();
 
-    Optional<Pet> getPetByPetId(Long petId);
+    Pet getPetByPetId(Long petId);
 
     List<Pet> getPetsByAdopter(User user);
 
@@ -22,4 +21,6 @@ public interface PetDetailsService {
     Pet addPet(Pet pet);
 
     Pet updatePet(Pet pet);
+
+    List<String> getAllPetBreeds();
 }

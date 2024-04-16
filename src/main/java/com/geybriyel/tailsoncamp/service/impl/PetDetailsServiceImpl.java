@@ -3,6 +3,8 @@ package com.geybriyel.tailsoncamp.service.impl;
 import com.geybriyel.tailsoncamp.entity.Pet;
 import com.geybriyel.tailsoncamp.entity.Shelter;
 import com.geybriyel.tailsoncamp.entity.User;
+import com.geybriyel.tailsoncamp.exception.InvalidBreedException;
+import com.geybriyel.tailsoncamp.exception.PetNotFoundException;
 import com.geybriyel.tailsoncamp.repository.PetRepository;
 import com.geybriyel.tailsoncamp.service.PetDetailsService;
 import jakarta.transaction.Transactional;
@@ -10,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,8 +25,9 @@ public class PetDetailsServiceImpl implements PetDetailsService {
     }
 
     @Override
-    public Optional<Pet> getPetByPetId(Long petId) {
-        return petRepository.findPetById(petId);
+    public Pet getPetByPetId(Long petId) {
+        return petRepository.findPetById(petId)
+                .orElseThrow(PetNotFoundException::new);
     }
 
     @Override
@@ -40,7 +42,11 @@ public class PetDetailsServiceImpl implements PetDetailsService {
 
     @Override
     public List<Pet> getPetsByBreed(String breed) {
-        return petRepository.findByBreed(breed);
+        if (getAllPetBreeds().contains(breed)) {
+            return petRepository.findByBreed(breed);
+        } else {
+            throw new InvalidBreedException();
+        }
     }
 
     @Transactional
@@ -51,21 +57,25 @@ public class PetDetailsServiceImpl implements PetDetailsService {
 
     @Override
     public Pet updatePet(Pet pet) {
-        Optional<Pet> petByPetId = getPetByPetId(pet.getId());
-        Pet retrievedPet = petByPetId.get();
-        retrievedPet.setName(pet.getName());
-        retrievedPet.setType(pet.getType());
-        retrievedPet.setBreed(pet.getBreed());
-        retrievedPet.setAge(pet.getAge());
-        retrievedPet.setGender(pet.getGender());
-        retrievedPet.setSize(pet.getSize());
-        retrievedPet.setDescription(pet.getDescription());
-        retrievedPet.setImageUrl(pet.getImageUrl());
-        retrievedPet.setAvailability(pet.getAvailability());
-        retrievedPet.setShelter(pet.getShelter());
-        retrievedPet.setAdopter(pet.getAdopter());
+        Pet petByPetId = getPetByPetId(pet.getId());
+        petByPetId.setName(pet.getName());
+        petByPetId.setType(pet.getType());
+        petByPetId.setBreed(pet.getBreed());
+        petByPetId.setAge(pet.getAge());
+        petByPetId.setGender(pet.getGender());
+        petByPetId.setSize(pet.getSize());
+        petByPetId.setDescription(pet.getDescription());
+        petByPetId.setImageUrl(pet.getImageUrl());
+        petByPetId.setAvailability(pet.getAvailability());
+        petByPetId.setShelter(pet.getShelter());
+        petByPetId.setAdopter(pet.getAdopter());
 
-        return petRepository.save(retrievedPet);
+        return petRepository.save(petByPetId);
+    }
+
+    @Override
+    public List<String> getAllPetBreeds() {
+        return petRepository.findDistinctBreed();
     }
 
 }

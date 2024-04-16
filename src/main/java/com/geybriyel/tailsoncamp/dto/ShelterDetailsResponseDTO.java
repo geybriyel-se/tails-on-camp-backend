@@ -3,6 +3,8 @@ package com.geybriyel.tailsoncamp.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.Instant;
+
 @Data
 @Builder
 public class ShelterDetailsResponseDTO {
@@ -32,5 +34,7 @@ public class ShelterDetailsResponseDTO {
     private String email;
 
     private String website;
+
+    private Instant createdAt;
 
 }

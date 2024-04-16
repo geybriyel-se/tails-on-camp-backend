@@ -6,6 +6,8 @@ import com.geybriyel.tailsoncamp.dto.PetDetailsResponseDTO;
 import com.geybriyel.tailsoncamp.entity.Pet;
 import com.geybriyel.tailsoncamp.entity.Shelter;
 import com.geybriyel.tailsoncamp.enums.StatusCode;
+import com.geybriyel.tailsoncamp.exception.InvalidBreedException;
+import com.geybriyel.tailsoncamp.exception.PetNotFoundException;
 import com.geybriyel.tailsoncamp.service.PetDetailsService;
 import com.geybriyel.tailsoncamp.service.ShelterDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -33,10 +36,15 @@ public class PetController {
 
     @GetMapping("/id")
     public ApiResponse<PetDetailsResponseDTO> retrievePetById(@RequestBody Long id) {
-        Optional<Pet> petByPetId = petService.getPetByPetId(id);
-        Pet pet = petByPetId.get();
-        PetDetailsResponseDTO petDto = buildPetResponseDtoFromPetObject(pet);
-        return new ApiResponse<>(StatusCode.SUCCESS, petDto);
+        try {
+            Pet petByPetId = petService.getPetByPetId(id);
+            PetDetailsResponseDTO petDto = buildPetResponseDtoFromPetObject(petByPetId);
+            return new ApiResponse<>(StatusCode.SUCCESS, petDto);
+        } catch (PetNotFoundException exception) {
+            return new ApiResponse<>(exception.getStatusCode(), null);
+        } catch (Exception e) {
+            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
 /*    @GetMapping("/adopter")
@@ -55,9 +63,15 @@ public class PetController {
 
     @GetMapping("/breed")
     public ApiResponse<List<PetDetailsResponseDTO>> retrievePetsByBreed(@RequestBody String breed) {
-        List<Pet> petsByBreed = petService.getPetsByBreed(breed);
-        List<PetDetailsResponseDTO> petsList = buildListPetResponseDtoFromPetList(petsByBreed);
-        return new ApiResponse<>(StatusCode.SUCCESS, petsList);
+        try {
+            List<Pet> petsByBreed = petService.getPetsByBreed(breed);
+            List<PetDetailsResponseDTO> petsList = buildListPetResponseDtoFromPetList(petsByBreed);
+            return new ApiResponse<>(StatusCode.SUCCESS, petsList);
+        } catch (InvalidBreedException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
+        } catch (Exception e) {
+            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @PostMapping("/register")
@@ -71,11 +85,26 @@ public class PetController {
     @PostMapping("/update")
     public ApiResponse<PetDetailsResponseDTO> updatePetDetails(@RequestBody PetDetailsRequestDTO pet) {
         Pet petToUpdate = buildPetFromPetRequestDto(pet);
-        Pet updatedPet = petService.updatePet(petToUpdate);
-        PetDetailsResponseDTO petResponse = buildPetResponseDtoFromPetObject(updatedPet);
-        return new ApiResponse<>(StatusCode.SUCCESS, petResponse);
+        try {
+            Pet updatedPet = petService.updatePet(petToUpdate);
+            PetDetailsResponseDTO petResponse = buildPetResponseDtoFromPetObject(updatedPet);
+            return new ApiResponse<>(StatusCode.SUCCESS, petResponse);
+        } catch (PetNotFoundException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
+        } catch (Exception e) {
+            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
+    /**
+     *
+     * @return A List of Strings that contains all the distinct pet breeds in the database
+     */
+    @GetMapping("/all-breeds")
+    public ApiResponse<Set<String>> retrieveAllBreeds() {
+        List<String> allPetBreeds = petService.getAllPetBreeds();
+        return new ApiResponse<>(StatusCode.SUCCESS, allPetBreeds);
+    }
 
     private Pet buildPetFromPetRequestDto(PetDetailsRequestDTO petDetailsRequestDTO) {
         Optional<Shelter> shelterByShelterId = shelterService.getShelterByShelterId(petDetailsRequestDTO.getShelterId());
