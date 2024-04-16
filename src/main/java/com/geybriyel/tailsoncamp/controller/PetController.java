@@ -107,7 +107,7 @@ public class PetController {
     }
 
     private Pet buildPetFromPetRequestDto(PetDetailsRequestDTO petDetailsRequestDTO) {
-        Optional<Shelter> shelterByShelterId = shelterService.getShelterByShelterId(petDetailsRequestDTO.getShelterId());
+        Shelter shelterByShelterId = shelterService.getShelterByShelterId(petDetailsRequestDTO.getShelterId());
         Pet pet = new Pet();
         pet.setId(petDetailsRequestDTO.getId());
         pet.setName(petDetailsRequestDTO.getName());
@@ -119,7 +119,7 @@ public class PetController {
         pet.setDescription(petDetailsRequestDTO.getDescription());
         pet.setImageUrl(petDetailsRequestDTO.getImageUrl());
         pet.setAvailability(petDetailsRequestDTO.getAvailability());
-        pet.setShelter(shelterByShelterId.get());
+        pet.setShelter(shelterByShelterId);
         return pet;
     }
 

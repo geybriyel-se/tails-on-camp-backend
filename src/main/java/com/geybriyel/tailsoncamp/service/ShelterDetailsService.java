@@ -4,22 +4,32 @@ package com.geybriyel.tailsoncamp.service;
 import com.geybriyel.tailsoncamp.entity.Shelter;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ShelterDetailsService {
 
     List<Shelter> getAllShelters();
 
-    Optional<Shelter> getShelterByShelterId(Long id);
+    Shelter getShelterByShelterId(Long id);
 
     List<Shelter> getSheltersByCity(String city);
 
     List<Shelter> getSheltersByProvince(String province);
 
-    Optional<Shelter> getShelterByShelterName(String shelterName);
+    Shelter getShelterByShelterName(String shelterName);
 
     Shelter addShelter(Shelter shelter);
 
     Shelter updateShelter(Shelter shelter);
+
+    List<String> getAllCity();
+
+    List<String> getAllProvince();
+
+    /**
+     * Checks for duplicate based on Shelter's shelterName and city fields.
+     * @param shelter
+     * @return true if duplicate exists; false if not
+     */
+    boolean exists(Shelter shelter);
 
 }

@@ -2,6 +2,7 @@ package com.geybriyel.tailsoncamp.repository;
 
 import com.geybriyel.tailsoncamp.entity.Shelter;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,5 +22,13 @@ public interface ShelterRepository extends JpaRepository<Shelter, Long> {
     Optional<Shelter> findShelterByShelterName(String name);
 
     Shelter save(Shelter shelter);
+
+    @Query("SELECT DISTINCT city FROM Shelter")
+    List<String> findDistinctCity();
+
+    @Query("SELECT DISTINCT province FROM Shelter")
+    List<String> findDistinctProvince();
+
+    boolean existsByShelterNameAndCity(String shelterName, String city);
 
 }

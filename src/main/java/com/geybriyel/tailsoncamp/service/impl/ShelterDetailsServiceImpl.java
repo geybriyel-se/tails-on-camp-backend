@@ -1,13 +1,13 @@
 package com.geybriyel.tailsoncamp.service.impl;
 
 import com.geybriyel.tailsoncamp.entity.Shelter;
+import com.geybriyel.tailsoncamp.exception.*;
 import com.geybriyel.tailsoncamp.repository.ShelterRepository;
 import com.geybriyel.tailsoncamp.service.ShelterDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -21,34 +21,47 @@ public class ShelterDetailsServiceImpl implements ShelterDetailsService {
     }
 
     @Override
-    public Optional<Shelter> getShelterByShelterId(Long id) {
-        return shelterRepository.findShelterByShelterId(id);
+    public Shelter getShelterByShelterId(Long id) {
+        return shelterRepository.findShelterByShelterId(id)
+                .orElseThrow(ShelterIdNotFound::new);
     }
 
     @Override
     public List<Shelter> getSheltersByCity(String city) {
-        return shelterRepository.findShelterByCity(city);
+        if (getAllCity().contains(city)) {
+            return shelterRepository.findShelterByCity(city);
+        } else {
+            throw new InvalidCityException();
+        }
     }
 
     @Override
     public List<Shelter> getSheltersByProvince(String province) {
-        return shelterRepository.findShelterByProvince(province);
+        if (getAllProvince().contains(province)) {
+            return shelterRepository.findShelterByProvince(province);
+        } else {
+            throw new InvalidProvinceException();
+        }
+
     }
 
     @Override
-    public Optional<Shelter> getShelterByShelterName(String shelterName) {
-        return shelterRepository.findShelterByShelterName(shelterName);
+    public Shelter getShelterByShelterName(String shelterName) {
+        return shelterRepository.findShelterByShelterName(shelterName)
+                .orElseThrow(InvalidShelterNameException::new);
     }
 
     @Override
     public Shelter addShelter(Shelter shelter) {
+        if (exists(shelter)) {
+            throw new DuplicateShelterException();
+        }
         return shelterRepository.save(shelter);
     }
 
     @Override
     public Shelter updateShelter(Shelter shelter) {
-        Optional<Shelter> shelterByShelterId = getShelterByShelterId(shelter.getShelterId());
-        Shelter retrievedShelter = shelterByShelterId.get();
+        Shelter retrievedShelter = getShelterByShelterId(shelter.getShelterId());
         retrievedShelter.setShelterName(shelter.getShelterName());
         retrievedShelter.setLotBlockHouseBldgNo(shelter.getLotBlockHouseBldgNo());
         retrievedShelter.setStreet(shelter.getStreet());
@@ -64,5 +77,23 @@ public class ShelterDetailsServiceImpl implements ShelterDetailsService {
         retrievedShelter.setCreatedAt(shelter.getCreatedAt());
         return shelterRepository.save(retrievedShelter);
     }
+
+    @Override
+    public List<String> getAllCity() {
+        return shelterRepository.findDistinctCity();
+    }
+
+    @Override
+    public List<String> getAllProvince() {
+        return shelterRepository.findDistinctProvince();
+    }
+
+    @Override
+    public boolean exists(Shelter shelter) {
+        String shelterName = shelter.getShelterName();
+        String city = shelter.getCity();
+        return shelterRepository.existsByShelterNameAndCity(shelterName, city);
+    }
+
 
 }

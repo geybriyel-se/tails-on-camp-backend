@@ -3,7 +3,6 @@ package com.geybriyel.tailsoncamp.entity;
 
 import com.geybriyel.tailsoncamp.utility.ShelterEntityListener;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.Instant;
