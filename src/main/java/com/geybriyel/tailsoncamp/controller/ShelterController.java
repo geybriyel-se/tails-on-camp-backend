@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,7 +34,7 @@ public class ShelterController {
             Shelter shelterByShelterId = shelterService.getShelterByShelterId(id);
             ShelterDetailsResponseDTO responseDTO = buildShelterResDtoFromShelterObject(shelterByShelterId);
             return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
-        } catch (ShelterIdNotFound e) {
+        } catch (InvalidShelterIdException e) {
             return new ApiResponse<>(e.getStatusCode(), null);
         } catch (Exception e) {
             return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -108,7 +107,7 @@ public class ShelterController {
             Shelter updatedShelter = shelterService.updateShelter(shelter);
             ShelterDetailsResponseDTO responseDTO = buildShelterResDtoFromShelterObject(updatedShelter);
             return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
-        } catch (ShelterIdNotFound e) {
+        } catch (InvalidShelterIdException e) {
             return new ApiResponse<>(e.getStatusCode(), null);
         } catch (Exception e) {
             return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());

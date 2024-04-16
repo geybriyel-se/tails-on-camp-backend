@@ -23,7 +23,7 @@ public class ShelterDetailsServiceImpl implements ShelterDetailsService {
     @Override
     public Shelter getShelterByShelterId(Long id) {
         return shelterRepository.findShelterByShelterId(id)
-                .orElseThrow(ShelterIdNotFound::new);
+                .orElseThrow(InvalidShelterIdException::new);
     }
 
     @Override

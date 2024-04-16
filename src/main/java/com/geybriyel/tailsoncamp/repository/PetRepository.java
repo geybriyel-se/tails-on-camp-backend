@@ -3,6 +3,7 @@ package com.geybriyel.tailsoncamp.repository;
 import com.geybriyel.tailsoncamp.entity.Pet;
 import com.geybriyel.tailsoncamp.entity.Shelter;
 import com.geybriyel.tailsoncamp.entity.User;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -28,5 +29,5 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
     @Query("SELECT DISTINCT breed FROM Pet")
     List<String> findDistinctBreed();
 
-
+    boolean existsByNameAndTypeAndGenderAndBreed(String name, String type, String gender, String breed);
 }

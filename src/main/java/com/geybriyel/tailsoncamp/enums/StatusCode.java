@@ -20,15 +20,16 @@ public enum StatusCode {
 
     LIST_EMPTY(HttpStatus.NOT_FOUND.value(), "The list is empty"),
 
-    PET_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Pet does not exist"),
+    INVALID_PET_ID(HttpStatus.BAD_REQUEST.value(), "Invalid pet ID"),
     INVALID_BREED(HttpStatus.BAD_REQUEST.value(), "No pets of the specified breed was found."),
+    DUPLICATE_PET(HttpStatus.CONFLICT.value(), "The pet already exists"),
 
-    SHELTER_ID_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "Invalid shelter ID."),
+    INVALID_SHELTER_ID(HttpStatus.BAD_REQUEST.value(), "Invalid shelter ID."),
     INVALID_CITY(HttpStatus.BAD_REQUEST.value(), "No shelters from the specified city was found in our database."),
     INVALID_PROVINCE(HttpStatus.BAD_REQUEST.value(), "No shelters from the specified province was found in our database."),
     INVALID_SHELTER_NAME(HttpStatus.BAD_REQUEST.value(), "Invalid shelter name."),
+    DUPLICATE_SHELTER(HttpStatus.CONFLICT.value(), "The shelter already exists"),
 
-    DUPLICATE_SHELTER(HttpStatus.CONTINUE.value(), "The shelter already exists"),
 
     SUCCESS(HttpStatus.OK.value(), "Success"),
     USER_CREATED(HttpStatus.CREATED.value(), "User created successfully"),

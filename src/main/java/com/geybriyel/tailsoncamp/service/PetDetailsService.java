@@ -23,4 +23,11 @@ public interface PetDetailsService {
     Pet updatePet(Pet pet);
 
     List<String> getAllPetBreeds();
+
+    /**
+     * Checks whether the pet exists based on name, type, gender, and breed attributes
+     * @param pet
+     * @return true if it exists
+     */
+    boolean exists(Pet pet);
 }

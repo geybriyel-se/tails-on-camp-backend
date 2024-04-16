@@ -3,8 +3,9 @@ package com.geybriyel.tailsoncamp.service.impl;
 import com.geybriyel.tailsoncamp.entity.Pet;
 import com.geybriyel.tailsoncamp.entity.Shelter;
 import com.geybriyel.tailsoncamp.entity.User;
+import com.geybriyel.tailsoncamp.exception.DuplicatePetException;
 import com.geybriyel.tailsoncamp.exception.InvalidBreedException;
-import com.geybriyel.tailsoncamp.exception.PetNotFoundException;
+import com.geybriyel.tailsoncamp.exception.InvalidPetIdException;
 import com.geybriyel.tailsoncamp.repository.PetRepository;
 import com.geybriyel.tailsoncamp.service.PetDetailsService;
 import jakarta.transaction.Transactional;
@@ -27,7 +28,7 @@ public class PetDetailsServiceImpl implements PetDetailsService {
     @Override
     public Pet getPetByPetId(Long petId) {
         return petRepository.findPetById(petId)
-                .orElseThrow(PetNotFoundException::new);
+                .orElseThrow(InvalidPetIdException::new);
     }
 
     @Override
@@ -52,6 +53,9 @@ public class PetDetailsServiceImpl implements PetDetailsService {
     @Transactional
     @Override
     public Pet addPet(Pet pet) {
+        if (exists(pet)) {
+            throw new DuplicatePetException();
+        }
         return petRepository.save(pet);
     }
 
@@ -76,6 +80,15 @@ public class PetDetailsServiceImpl implements PetDetailsService {
     @Override
     public List<String> getAllPetBreeds() {
         return petRepository.findDistinctBreed();
+    }
+
+    @Override
+    public boolean exists(Pet pet) {
+        String name = pet.getName();
+        String type = pet.getType();
+        String gender = pet.getGender();
+        String breed = pet.getBreed();
+        return petRepository.existsByNameAndTypeAndGenderAndBreed(name, type, gender, breed);
     }
 
 }
