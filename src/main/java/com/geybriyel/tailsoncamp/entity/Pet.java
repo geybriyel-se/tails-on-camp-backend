@@ -36,6 +36,7 @@ public class Pet {
 
     private String imageUrl;
 
+    @Column(columnDefinition = "INTEGER DEFAULT 1")
     private Integer availability;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -74,7 +74,6 @@ public class ShelterDetailsServiceImpl implements ShelterDetailsService {
         retrievedShelter.setContactNumber(shelter.getContactNumber());
         retrievedShelter.setEmail(shelter.getEmail());
         retrievedShelter.setWebsite(shelter.getWebsite());
-        retrievedShelter.setCreatedAt(shelter.getCreatedAt());
         return shelterRepository.save(retrievedShelter);
     }
 
