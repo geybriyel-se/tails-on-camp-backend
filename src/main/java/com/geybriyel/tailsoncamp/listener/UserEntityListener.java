@@ -1,4 +1,4 @@
-package com.geybriyel.tailsoncamp.utility;
+package com.geybriyel.tailsoncamp.listener;
 
 import com.geybriyel.tailsoncamp.entity.User;
 import jakarta.persistence.PrePersist;

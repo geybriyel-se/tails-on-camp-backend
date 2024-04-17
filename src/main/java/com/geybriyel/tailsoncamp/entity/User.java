@@ -1,7 +1,7 @@
 package com.geybriyel.tailsoncamp.entity;
 
 import com.geybriyel.tailsoncamp.enums.Role;
-import com.geybriyel.tailsoncamp.utility.UserEntityListener;
+import com.geybriyel.tailsoncamp.listener.UserEntityListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

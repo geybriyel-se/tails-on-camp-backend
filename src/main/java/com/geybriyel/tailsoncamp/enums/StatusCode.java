@@ -17,6 +17,7 @@ public enum StatusCode {
     USER_DOES_NOT_EXIST(HttpStatus.NOT_FOUND.value(), "User does not exist"),
     INCORRECT_PASSWORD(HttpStatus.UNAUTHORIZED.value(), "Incorrect password"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "Input values are not valid"),
+    INVALID_USER_ID(HttpStatus.BAD_REQUEST.value(), "Invalid user ID"),
 
     LIST_EMPTY(HttpStatus.NOT_FOUND.value(), "The list is empty"),
 
@@ -30,6 +31,8 @@ public enum StatusCode {
     INVALID_SHELTER_NAME(HttpStatus.BAD_REQUEST.value(), "Invalid shelter name."),
     DUPLICATE_SHELTER(HttpStatus.CONFLICT.value(), "The shelter already exists"),
 
+    INVALID_ADOPTION_REQUEST_ID(HttpStatus.BAD_REQUEST.value(), "Invalid adoption request ID"),
+    DUPLICATE_ADOPTION_REQUEST(HttpStatus.CONFLICT.value(), "Adoption request has already been created"),
 
     SUCCESS(HttpStatus.OK.value(), "Success"),
     USER_CREATED(HttpStatus.CREATED.value(), "User created successfully"),

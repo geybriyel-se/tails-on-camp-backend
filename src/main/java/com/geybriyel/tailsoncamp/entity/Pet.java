@@ -1,6 +1,6 @@
 package com.geybriyel.tailsoncamp.entity;
 
-import com.geybriyel.tailsoncamp.utility.PetEntityListener;
+import com.geybriyel.tailsoncamp.listener.PetEntityListener;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

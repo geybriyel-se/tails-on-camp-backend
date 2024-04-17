@@ -1,7 +1,7 @@
 package com.geybriyel.tailsoncamp.entity;
 
 
-import com.geybriyel.tailsoncamp.utility.ShelterEntityListener;
+import com.geybriyel.tailsoncamp.listener.ShelterEntityListener;
 import jakarta.persistence.*;
 import lombok.Data;
 
