@@ -11,7 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.geybriyel.tailsoncamp.mapper.ShelterMapper.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +20,6 @@ import java.util.stream.Collectors;
 public class ShelterController {
 
     private final ShelterDetailsService shelterService;
-
 
     @GetMapping("/all")
     public ApiResponse<List<ShelterDetailsResponseDTO>> retrieveAllShelters() {
@@ -118,51 +118,6 @@ public class ShelterController {
     public ApiResponse<List<String>> retrieveDistinctCity() {
         List<String> allCity = shelterService.getAllCity();
         return new ApiResponse<>(StatusCode.SUCCESS, allCity);
-    }
-
-
-    private Shelter buildShelterObjectFromReqDto(ShelterDetailsRequestDTO shelterDetailsRequestDTO) {
-        Shelter shelter = new Shelter();
-        shelter.setShelterId(shelterDetailsRequestDTO.getShelterId());
-        shelter.setShelterName(shelterDetailsRequestDTO.getShelterName());
-        shelter.setLotBlockHouseBldgNo(shelterDetailsRequestDTO.getLotBlockHouseBldgNo());
-        shelter.setStreet(shelterDetailsRequestDTO.getStreet());
-        shelter.setSubdivisionVillage(shelterDetailsRequestDTO.getSubdivisionVillage());
-        shelter.setBarangay(shelterDetailsRequestDTO.getBarangay());
-        shelter.setCity(shelterDetailsRequestDTO.getCity());
-        shelter.setProvince(shelterDetailsRequestDTO.getProvince());
-        shelter.setCountry(shelterDetailsRequestDTO.getCountry());
-        shelter.setZipcode(shelterDetailsRequestDTO.getZipcode());
-        shelter.setContactNumber(shelterDetailsRequestDTO.getContactNumber());
-        shelter.setEmail(shelterDetailsRequestDTO.getEmail());
-        shelter.setWebsite(shelterDetailsRequestDTO.getWebsite());
-        return shelter;
-
-    }
-
-    private List<ShelterDetailsResponseDTO> buildListShelterResDtoFromShelterList(List<Shelter> allShelters) {
-        return allShelters.stream()
-                .map(this::buildShelterResDtoFromShelterObject)
-                .collect(Collectors.toList());
-    }
-
-    private ShelterDetailsResponseDTO buildShelterResDtoFromShelterObject(Shelter shelter) {
-        return ShelterDetailsResponseDTO.builder()
-                .shelterId(shelter.getShelterId())
-                .shelterName(shelter.getShelterName())
-                .lotBlockHouseBldgNo(shelter.getLotBlockHouseBldgNo())
-                .street(shelter.getStreet())
-                .subdivisionVillage(shelter.getSubdivisionVillage())
-                .barangay(shelter.getBarangay())
-                .city(shelter.getCity())
-                .province(shelter.getProvince())
-                .country(shelter.getCountry())
-                .zipcode(shelter.getZipcode())
-                .contactNumber(shelter.getContactNumber())
-                .email(shelter.getEmail())
-                .website(shelter.getWebsite())
-                .createdAt(shelter.getCreatedAt())
-                .build();
     }
 
 }

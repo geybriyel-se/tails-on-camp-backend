@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static com.geybriyel.tailsoncamp.mapper.PetMapper.*;
 
 @RestController
 @RequestMapping("/v1/pets")
@@ -50,20 +51,6 @@ public class PetController {
         }
     }
 
-/*    @GetMapping("/adopter")
-    public ApiResponse<List<PetDetailsResponseDTO>> retrievePetsByAdopter(@RequestBody User user) {
-        List<Pet> petsByAdopter = petService.getPetsByAdopter(user);
-        List<PetDetailsResponseDTO> petsList = buildListPetResponseDtoFromPetList(petsByAdopter);
-        return new ApiResponse<>(StatusCode.SUCCESS, petsList);
-    }*/
-
-/*    @GetMapping("/shelter")
-    public ApiResponse<List<PetDetailsResponseDTO>> retrievePetsByShelter(@RequestBody Shelter shelter) {
-        List<Pet> petsByShelter = petService.getPetsByShelter(shelter);
-        List<PetDetailsResponseDTO> petsList = buildListPetResponseDtoFromPetList(petsByShelter);
-        return new ApiResponse<>(StatusCode.SUCCESS, petsList);
-    }*/
-
     @GetMapping("/breed")
     public ApiResponse<List<PetDetailsResponseDTO>> retrievePetsByBreed(@RequestBody String breed) {
         try {
@@ -82,7 +69,8 @@ public class PetController {
 
     @PostMapping("/register")
     public ApiResponse<PetDetailsResponseDTO> registerPet(@RequestBody PetDetailsRequestDTO petDetailsRequestDTO) {
-        Pet pet = buildPetFromPetRequestDto(petDetailsRequestDTO);
+        Shelter shelter = shelterService.getShelterByShelterId(petDetailsRequestDTO.getShelterId());
+        Pet pet = buildPetFromPetRequestDto(petDetailsRequestDTO, shelter);
         try {
             Pet addedPet = petService.addPet(pet);
             PetDetailsResponseDTO petResponse = buildPetResponseDtoFromPetObject(addedPet);
@@ -96,7 +84,8 @@ public class PetController {
 
     @PostMapping("/update")
     public ApiResponse<PetDetailsResponseDTO> updatePetDetails(@RequestBody PetDetailsRequestDTO pet) {
-        Pet petToUpdate = buildPetFromPetRequestDto(pet);
+        Shelter shelter = shelterService.getShelterByShelterId(pet.getShelterId());
+        Pet petToUpdate = buildPetFromPetRequestDto(pet, shelter);
         try {
             Pet updatedPet = petService.updatePet(petToUpdate);
             PetDetailsResponseDTO petResponse = buildPetResponseDtoFromPetObject(updatedPet);
@@ -109,7 +98,6 @@ public class PetController {
     }
 
     /**
-     *
      * @return A List of Strings that contains all the distinct pet breeds in the database
      */
     @GetMapping("/all-breeds")
@@ -118,45 +106,4 @@ public class PetController {
         return new ApiResponse<>(StatusCode.SUCCESS, allPetBreeds);
     }
 
-    private Pet buildPetFromPetRequestDto(PetDetailsRequestDTO petDetailsRequestDTO) {
-        Shelter shelterByShelterId = shelterService.getShelterByShelterId(petDetailsRequestDTO.getShelterId());
-        Pet pet = new Pet();
-        pet.setId(petDetailsRequestDTO.getId());
-        pet.setName(petDetailsRequestDTO.getName());
-        pet.setType(petDetailsRequestDTO.getType());
-        pet.setBreed(petDetailsRequestDTO.getBreed());
-        pet.setAge(petDetailsRequestDTO.getAge());
-        pet.setGender(petDetailsRequestDTO.getGender());
-        pet.setSize(petDetailsRequestDTO.getSize());
-        pet.setDescription(petDetailsRequestDTO.getDescription());
-        pet.setImageUrl(petDetailsRequestDTO.getImageUrl());
-        pet.setAvailability(petDetailsRequestDTO.getAvailability());
-        pet.setShelter(shelterByShelterId);
-        return pet;
-    }
-
-
-    private PetDetailsResponseDTO buildPetResponseDtoFromPetObject(Pet pet) {
-        return PetDetailsResponseDTO.builder()
-                .id(pet.getId())
-                .name(pet.getName())
-                .type(pet.getType())
-                .breed(pet.getBreed())
-                .age(pet.getAge())
-                .gender(pet.getGender())
-                .size(pet.getSize())
-                .description(pet.getDescription())
-                .imageUrl(pet.getImageUrl())
-                .availability(pet.getAvailability())
-                .shelter(pet.getShelter())
-                .adopter(pet.getAdopter())
-                .createdAt(pet.getCreatedAt())
-                .build();
-    }
-
-    private List<PetDetailsResponseDTO> buildListPetResponseDtoFromPetList(List<Pet> allPets) {
-        return allPets.stream()
-                .map(this::buildPetResponseDtoFromPetObject)
-                .collect(Collectors.toList());
-    }
 }

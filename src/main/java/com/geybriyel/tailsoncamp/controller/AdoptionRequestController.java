@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.geybriyel.tailsoncamp.mapper.AdoptionRequestMapper.*;
+import static com.geybriyel.tailsoncamp.mapper.PetMapper.buildListPetResponseDtoFromPetList;
+import static com.geybriyel.tailsoncamp.mapper.UserMapper.buildListUserResponseDtoFromUserList;
+
 @RestController
 @RequestMapping("/v1/adoptions")
 @RequiredArgsConstructor
@@ -45,7 +49,7 @@ public class AdoptionRequestController {
     public ApiResponse<AdoptionRequestResponseDTO> retrieveAdoptionRequestsByAdoptionId(@RequestBody Long id) {
         try {
             AdoptionRequest adoptionRequestByAdoptionId = adoptionRequestService.getAdoptionRequestByAdoptionId(id);
-            AdoptionRequestResponseDTO responseDTO = buildResponseDtoFromObject(adoptionRequestByAdoptionId);
+            AdoptionRequestResponseDTO responseDTO = buildAdoptionResponseDtoFromAdoptionObject(adoptionRequestByAdoptionId);
             return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
         } catch (InvalidAdoptionRequestIdException e) {
             return new ApiResponse<>(e.getStatusCode(), null);
@@ -101,18 +105,12 @@ public class AdoptionRequestController {
         }
     }
 
-    private List<User> getUsersFromAdoptionRequestList(List<AdoptionRequest> adoptionRequestsByPet) {
-        return adoptionRequestsByPet.stream()
-                .map(AdoptionRequest::getAdopter)
-                .collect(Collectors.toList());
-    }
-
     @PostMapping("/create")
     public ApiResponse<AdoptionRequestResponseDTO> createRequest(@RequestBody AdoptionRequestRequestDTO requestDTO) {
-        AdoptionRequest adoptionRequest = buildAdoptionRequestObjectFromAdoptionRequestDto(requestDTO);
         try {
+            AdoptionRequest adoptionRequest = buildAdoptionRequestObjectFromAdoptionRequestDto(requestDTO, userDetailsService, petDetailsService);
             AdoptionRequest saveRequest = adoptionRequestService.saveRequest(adoptionRequest);
-            AdoptionRequestResponseDTO responseDTO = buildResponseDtoFromObject(saveRequest);
+            AdoptionRequestResponseDTO responseDTO = buildAdoptionResponseDtoFromAdoptionObject(saveRequest);
             return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
         } catch (PetNotAvailableException e) {
             return new ApiResponse<>(e.getStatusCode(), null);
@@ -127,81 +125,10 @@ public class AdoptionRequestController {
         }
     }
 
-    private AdoptionRequest buildAdoptionRequestObjectFromAdoptionRequestDto(@RequestBody AdoptionRequestRequestDTO request) {
-        AdoptionRequest adoptionRequest = new AdoptionRequest();
-        try {
-            User user = userDetailsService.getUserById(request.getUserId());
-            Pet pet = petDetailsService.getPetByPetId(request.getPetId());
-            adoptionRequest.setAdopter(user);
-            adoptionRequest.setPet(pet);
-            return adoptionRequest;
-        } catch (InvalidUserIdException | InvalidPetIdException e) {
-            return null;
-        } catch (Exception e) {
-            throw new RuntimeException("Error building adoption request from DTO: " + e.getMessage(), e);
-        }
-    }
-
-
-
-    private List<AdoptionRequestResponseDTO> buildListResponseDtoFromObjectList(List<AdoptionRequest> allAdoptionRequests) {
-        return allAdoptionRequests.stream()
-                .map(this::buildResponseDtoFromObject)
+    private List<User> getUsersFromAdoptionRequestList(List<AdoptionRequest> adoptionRequestsByPet) {
+        return adoptionRequestsByPet.stream()
+                .map(AdoptionRequest::getAdopter)
                 .collect(Collectors.toList());
     }
 
-    private AdoptionRequestResponseDTO buildResponseDtoFromObject(AdoptionRequest req) {
-        PetDetailsResponseDTO petResDto = buildPetResponseDtoFromPetObject(req.getPet());
-        UserResponseDTO userResDto = buildUserResponseDtoFromUserObject(req.getAdopter());
-
-        return AdoptionRequestResponseDTO.builder()
-                .pet(petResDto)
-                .adopter(userResDto)
-                .status(req.getStatus())
-                .createdAt(req.getCreatedAt())
-                .updatedAt(req.getUpdatedAt())
-                .build();
-    }
-
-    private List<UserResponseDTO> buildListUserResponseDtoFromUserList(List<User> users) {
-        return users.stream()
-                .map(this::buildUserResponseDtoFromUserObject)
-                .collect(Collectors.toList());
-    }
-
-    private UserResponseDTO buildUserResponseDtoFromUserObject(User user) {
-        return UserResponseDTO.builder()
-                .userId(user.getUserId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .phoneNumber(user.getPhoneNumber())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .address(user.getAddress())
-                .build();
-    }
-
-    private PetDetailsResponseDTO buildPetResponseDtoFromPetObject(Pet pet) {
-        return PetDetailsResponseDTO.builder()
-                .id(pet.getId())
-                .name(pet.getName())
-                .type(pet.getType())
-                .breed(pet.getBreed())
-                .age(pet.getAge())
-                .gender(pet.getGender())
-                .size(pet.getSize())
-                .description(pet.getDescription())
-                .imageUrl(pet.getImageUrl())
-                .availability(pet.getAvailability())
-                .shelter(pet.getShelter())
-                .adopter(pet.getAdopter())
-                .createdAt(pet.getCreatedAt())
-                .build();
-    }
-
-    private List<PetDetailsResponseDTO> buildListPetResponseDtoFromPetList(List<Pet> allPets) {
-        return allPets.stream()
-                .map(this::buildPetResponseDtoFromPetObject)
-                .collect(Collectors.toList());
-    }
 }
