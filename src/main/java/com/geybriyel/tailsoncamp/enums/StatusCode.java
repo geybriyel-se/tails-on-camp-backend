@@ -18,6 +18,7 @@ public enum StatusCode {
     INCORRECT_PASSWORD(HttpStatus.UNAUTHORIZED.value(), "Incorrect password"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "Input values are not valid"),
     INVALID_USER_ID(HttpStatus.BAD_REQUEST.value(), "Invalid user ID"),
+    INVALID_USERNAME(HttpStatus.BAD_REQUEST.value(), "Invalid username"),
 
     LIST_EMPTY(HttpStatus.NOT_FOUND.value(), "The list is empty"),
 

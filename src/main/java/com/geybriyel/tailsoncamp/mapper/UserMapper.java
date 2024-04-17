@@ -1,5 +1,6 @@
 package com.geybriyel.tailsoncamp.mapper;
 
+import com.geybriyel.tailsoncamp.dto.UserRequestDTO;
 import com.geybriyel.tailsoncamp.dto.UserResponseDTO;
 import com.geybriyel.tailsoncamp.entity.User;
 
@@ -26,4 +27,15 @@ public class UserMapper {
                 .collect(Collectors.toList());
     }
 
+    public static User buildUserObjectFromRequestDto(UserRequestDTO userRequestDTO) {
+        User user = new User();
+        user.setUserId(userRequestDTO.getUserId());
+        user.setEmail(userRequestDTO.getEmail());
+        user.setUsername(userRequestDTO.getUsername());
+        user.setFirstName(userRequestDTO.getFirstName());
+        user.setLastName(userRequestDTO.getLastName());
+        user.setAddress(userRequestDTO.getAddress());
+        user.setPhoneNumber(userRequestDTO.getPhoneNumber());
+        return user;
+    }
 }
