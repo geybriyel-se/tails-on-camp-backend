@@ -33,6 +33,7 @@ public enum StatusCode {
 
     INVALID_ADOPTION_REQUEST_ID(HttpStatus.BAD_REQUEST.value(), "Invalid adoption request ID"),
     DUPLICATE_ADOPTION_REQUEST(HttpStatus.CONFLICT.value(), "Adoption request has already been created"),
+    PET_NOT_AVAILABLE(HttpStatus.CONFLICT.value(), "Pet is not available for adoption"),
 
     SUCCESS(HttpStatus.OK.value(), "Success"),
     USER_CREATED(HttpStatus.CREATED.value(), "User created successfully"),

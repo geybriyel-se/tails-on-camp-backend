@@ -30,4 +30,6 @@ public interface PetDetailsService {
      * @return true if it exists
      */
     boolean exists(Pet pet);
+
+    List<Pet> getAllAvailablePets();
 }

@@ -91,4 +91,9 @@ public class PetDetailsServiceImpl implements PetDetailsService {
         return petRepository.existsByNameAndTypeAndGenderAndBreed(name, type, gender, breed);
     }
 
+    @Override
+    public List<Pet> getAllAvailablePets() {
+        return petRepository.findByAvailability(1);
+    }
+
 }

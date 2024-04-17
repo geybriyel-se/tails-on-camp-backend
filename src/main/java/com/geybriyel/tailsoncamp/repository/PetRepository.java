@@ -30,4 +30,14 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
     List<String> findDistinctBreed();
 
     boolean existsByNameAndTypeAndGenderAndBreed(String name, String type, String gender, String breed);
+
+    /**
+     *
+     * @param availability 1: available 0: not available
+     * @return
+     */
+    List<Pet> findByAvailability(Integer availability);
+
+
+
 }

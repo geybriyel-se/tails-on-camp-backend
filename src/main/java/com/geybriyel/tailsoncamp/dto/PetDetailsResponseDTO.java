@@ -30,7 +30,7 @@ public class PetDetailsResponseDTO {
 
     private String imageUrl;
 
-    private String availability;
+    private Integer availability;
 
     private Shelter shelter;
 

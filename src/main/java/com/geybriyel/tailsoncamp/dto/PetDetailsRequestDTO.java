@@ -27,7 +27,7 @@ public class PetDetailsRequestDTO {
 
     private String imageUrl;
 
-    private String availability;
+    private Integer availability;
 
     private Long shelterId;
 

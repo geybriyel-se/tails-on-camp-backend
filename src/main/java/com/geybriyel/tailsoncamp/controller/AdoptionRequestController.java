@@ -5,10 +5,7 @@ import com.geybriyel.tailsoncamp.entity.AdoptionRequest;
 import com.geybriyel.tailsoncamp.entity.Pet;
 import com.geybriyel.tailsoncamp.entity.User;
 import com.geybriyel.tailsoncamp.enums.StatusCode;
-import com.geybriyel.tailsoncamp.exception.DuplicateAdoptionRequestException;
-import com.geybriyel.tailsoncamp.exception.InvalidAdoptionRequestIdException;
-import com.geybriyel.tailsoncamp.exception.InvalidPetIdException;
-import com.geybriyel.tailsoncamp.exception.InvalidUserIdException;
+import com.geybriyel.tailsoncamp.exception.*;
 import com.geybriyel.tailsoncamp.service.AdoptionRequestService;
 import com.geybriyel.tailsoncamp.service.PetDetailsService;
 import com.geybriyel.tailsoncamp.service.impl.UserDetailsServiceImpl;
@@ -117,6 +114,8 @@ public class AdoptionRequestController {
             AdoptionRequest saveRequest = adoptionRequestService.saveRequest(adoptionRequest);
             AdoptionRequestResponseDTO responseDTO = buildResponseDtoFromObject(saveRequest);
             return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
+        } catch (PetNotAvailableException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
         } catch (InvalidUserIdException e) {
             return new ApiResponse<>(e.getStatusCode(), null);
         } catch (InvalidPetIdException e) {

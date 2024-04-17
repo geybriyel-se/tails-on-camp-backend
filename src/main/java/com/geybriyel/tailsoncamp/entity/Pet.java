@@ -36,7 +36,7 @@ public class Pet {
 
     private String imageUrl;
 
-    private String availability;
+    private Integer availability;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "shelter_id")
