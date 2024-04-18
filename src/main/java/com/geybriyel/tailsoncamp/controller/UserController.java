@@ -8,7 +8,9 @@ import com.geybriyel.tailsoncamp.enums.StatusCode;
 import com.geybriyel.tailsoncamp.exception.InvalidUserIdException;
 import com.geybriyel.tailsoncamp.mapper.UserMapper;
 import com.geybriyel.tailsoncamp.service.impl.UserDetailsServiceImpl;
+import com.geybriyel.tailsoncamp.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,7 @@ import java.util.List;
 
 import static com.geybriyel.tailsoncamp.mapper.UserMapper.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/users")
 @RequiredArgsConstructor
@@ -51,6 +54,8 @@ public class UserController {
         try {
             User user = userDetailsService.loadUserByUsername(username);
             UserResponseDTO responseDTO = buildUserResponseDtoFromUserObject(user);
+            log.info("Logged in user: {}", SecurityUtils.getLoggedInUser());
+            log.info("Retrieved user: {}", user);
             return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
         } catch (UsernameNotFoundException e) {
             return new ApiResponse<>(StatusCode.INVALID_USERNAME, e.getMessage());

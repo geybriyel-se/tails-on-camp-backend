@@ -18,11 +18,17 @@ public class ShelterMapper {
         shelter.setBarangay(shelterDetailsRequestDTO.getBarangay());
         shelter.setCity(shelterDetailsRequestDTO.getCity());
         shelter.setProvince(shelterDetailsRequestDTO.getProvince());
-        shelter.setCountry(shelterDetailsRequestDTO.getCountry());
         shelter.setZipcode(shelterDetailsRequestDTO.getZipcode());
         shelter.setContactNumber(shelterDetailsRequestDTO.getContactNumber());
         shelter.setEmail(shelterDetailsRequestDTO.getEmail());
         shelter.setWebsite(shelterDetailsRequestDTO.getWebsite());
+
+        if (!shelterDetailsRequestDTO.getCountry().isBlank()) {
+            shelter.setCountry(shelterDetailsRequestDTO.getCountry());
+        } else {
+            shelter.setCountry("Philippines");
+        }
+
         return shelter;
     }
 

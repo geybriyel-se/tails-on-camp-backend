@@ -4,6 +4,7 @@ import com.geybriyel.tailsoncamp.entity.Shelter;
 import com.geybriyel.tailsoncamp.exception.*;
 import com.geybriyel.tailsoncamp.repository.ShelterRepository;
 import com.geybriyel.tailsoncamp.service.ShelterDetailsService;
+import com.geybriyel.tailsoncamp.validator.ObjectsValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,8 @@ import java.util.List;
 public class ShelterDetailsServiceImpl implements ShelterDetailsService {
 
     private final ShelterRepository shelterRepository;
+
+    private final ObjectsValidator<Shelter> validator;
 
     @Override
     public List<Shelter> getAllShelters() {
@@ -53,6 +56,7 @@ public class ShelterDetailsServiceImpl implements ShelterDetailsService {
 
     @Override
     public Shelter addShelter(Shelter shelter) {
+        validator.validate(shelter);
         if (exists(shelter)) {
             throw new DuplicateShelterException();
         }

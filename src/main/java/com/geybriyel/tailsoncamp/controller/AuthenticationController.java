@@ -7,6 +7,7 @@ import com.geybriyel.tailsoncamp.enums.StatusCode;
 import com.geybriyel.tailsoncamp.exception.ObjectNotValidException;
 import com.geybriyel.tailsoncamp.security.AuthenticationResponse;
 import com.geybriyel.tailsoncamp.security.AuthenticationService;
+import com.geybriyel.tailsoncamp.security.JwtService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+
+    private final JwtService jwtService;
 
     @PostMapping("/register")
     public ApiResponse<AuthenticationResponse> register(@Valid @RequestBody RegisterUserRequestDTO request) {
@@ -47,6 +50,11 @@ public class AuthenticationController {
     public ApiResponse<AuthenticationResponse> login(@Valid @RequestBody LoginUserRequestDTO request) {
         try {
             AuthenticationResponse token = authenticationService.authenticate(request);
+            String username = jwtService.extractUsername(token.getToken());
+            Long userId = jwtService.extractUserId(token.getToken());
+            String email = jwtService.extractEmail(token.getToken());
+            log.info("Username: {} | UserId: {} | Email: {}", username, userId, email);
+
             return new ApiResponse<>(StatusCode.SUCCESS, token);
         } catch (UsernameNotFoundException exception) {
             return new ApiResponse<>(StatusCode.USER_DOES_NOT_EXIST, null);

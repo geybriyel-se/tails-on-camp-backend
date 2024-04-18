@@ -11,7 +11,6 @@ import com.geybriyel.tailsoncamp.service.PetDetailsService;
 import com.geybriyel.tailsoncamp.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -58,17 +57,10 @@ public class AdoptionRequestController {
         }
     }
 
-    /*
-     * The current implementation checks if the user exists by USERNAME ONLY.
-     * Incorrect/Invalid  email and/or userId still returns Success
-     *
-     * @param userRequest
-     * @return List of Adoption Requests of the User
-     */
     @GetMapping("/adopter")
-    public ApiResponse<List<PetDetailsResponseDTO>> retrieveAdoptionRequestsByAdopter(@RequestBody UserAdoptionRequestRequestDTO userRequest) {
+    public ApiResponse<List<PetDetailsResponseDTO>> retrieveAdoptionRequestsByAdopter(@RequestBody Long userId) {
         try {
-            User user = userDetailsService.loadUserByUsername(userRequest.getUsername());
+            User user = userDetailsService.getUserById(userId);
             List<AdoptionRequest> adoptionRequestsByAdopter = adoptionRequestService.getAdoptionRequestsByAdopter(user);
             if (adoptionRequestsByAdopter.isEmpty()) {
                 return new ApiResponse<>(StatusCode.LIST_EMPTY, adoptionRequestsByAdopter);
@@ -79,8 +71,8 @@ public class AdoptionRequestController {
 
             List<PetDetailsResponseDTO> responseDTOS = buildListPetResponseDtoFromPetList(petsRequestByUser);
             return new ApiResponse<>(StatusCode.SUCCESS, responseDTOS);
-        } catch (UsernameNotFoundException e) {
-            return new ApiResponse<>(StatusCode.USER_DOES_NOT_EXIST, e.getMessage());
+        } catch (InvalidUserIdException e) {
+            return new ApiResponse<>(e.getStatusCode(), e.getMessage());
         } catch (Exception e) {
             return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }

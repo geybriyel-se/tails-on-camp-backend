@@ -93,6 +93,8 @@ public class ShelterController {
             Shelter savedShelter = shelterService.addShelter(shelter);
             ShelterDetailsResponseDTO responseDTO = buildShelterResDtoFromShelterObject(savedShelter);
             return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
+        } catch (ObjectNotValidException e) {
+            return new ApiResponse<>(e.getStatusCode(), e.getViolations());
         } catch (DuplicateShelterException e) {
             return new ApiResponse<>(e.getStatusCode(), null);
         } catch (Exception e) {

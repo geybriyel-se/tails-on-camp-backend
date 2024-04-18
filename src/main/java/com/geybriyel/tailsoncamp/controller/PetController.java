@@ -9,9 +9,13 @@ import com.geybriyel.tailsoncamp.enums.StatusCode;
 import com.geybriyel.tailsoncamp.exception.DuplicatePetException;
 import com.geybriyel.tailsoncamp.exception.InvalidBreedException;
 import com.geybriyel.tailsoncamp.exception.InvalidPetIdException;
+import com.geybriyel.tailsoncamp.exception.ObjectNotValidException;
 import com.geybriyel.tailsoncamp.service.PetDetailsService;
 import com.geybriyel.tailsoncamp.service.ShelterDetailsService;
+import com.geybriyel.tailsoncamp.utils.SecurityUtils;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +23,7 @@ import java.util.Set;
 
 import static com.geybriyel.tailsoncamp.mapper.PetMapper.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/pets")
 @RequiredArgsConstructor
@@ -35,6 +40,7 @@ public class PetController {
             return new ApiResponse<>(StatusCode.LIST_EMPTY, allPets);
         }
         List<PetDetailsResponseDTO> petsList = buildListPetResponseDtoFromPetList(allPets);
+        log.info("logged in user: {}", SecurityUtils.getLoggedInUser());
         return new ApiResponse<>(StatusCode.SUCCESS, petsList);
     }
 
@@ -68,19 +74,22 @@ public class PetController {
     }
 
     @PostMapping("/register")
-    public ApiResponse<PetDetailsResponseDTO> registerPet(@RequestBody PetDetailsRequestDTO petDetailsRequestDTO) {
+    public ApiResponse<PetDetailsResponseDTO> registerPet(@Valid @RequestBody PetDetailsRequestDTO petDetailsRequestDTO) {
         Shelter shelter = shelterService.getShelterByShelterId(petDetailsRequestDTO.getShelterId());
         Pet pet = buildPetFromPetRequestDto(petDetailsRequestDTO, shelter);
         try {
             Pet addedPet = petService.addPet(pet);
             PetDetailsResponseDTO petResponse = buildPetResponseDtoFromPetObject(addedPet);
             return new ApiResponse<>(StatusCode.SUCCESS, petResponse);
+        } catch (ObjectNotValidException e) {
+            return new ApiResponse<>(e.getStatusCode(), e.getViolations());
         } catch (DuplicatePetException e) {
             return new ApiResponse<>(e.getStatusCode(), null);
         } catch (Exception e) {
             return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
 
     @PostMapping("/update")
     public ApiResponse<PetDetailsResponseDTO> updatePetDetails(@RequestBody PetDetailsRequestDTO pet) {
@@ -105,5 +114,7 @@ public class PetController {
         List<String> allPetBreeds = petService.getAllPetBreeds();
         return new ApiResponse<>(StatusCode.SUCCESS, allPetBreeds);
     }
+
+
 
 }

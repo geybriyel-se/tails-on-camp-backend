@@ -24,7 +24,6 @@ public class AdoptionRequest {
     @JoinColumn(name = "adopter_id", referencedColumnName = "user_id")
     private User adopter;
 
-    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'Pending'")
     private String status;
 
     private Instant createdAt;

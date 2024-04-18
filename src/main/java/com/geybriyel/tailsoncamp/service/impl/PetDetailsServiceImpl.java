@@ -6,8 +6,10 @@ import com.geybriyel.tailsoncamp.entity.User;
 import com.geybriyel.tailsoncamp.exception.DuplicatePetException;
 import com.geybriyel.tailsoncamp.exception.InvalidBreedException;
 import com.geybriyel.tailsoncamp.exception.InvalidPetIdException;
+import com.geybriyel.tailsoncamp.exception.InvalidShelterIdException;
 import com.geybriyel.tailsoncamp.repository.PetRepository;
 import com.geybriyel.tailsoncamp.service.PetDetailsService;
+import com.geybriyel.tailsoncamp.validator.ObjectsValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import java.util.List;
 public class PetDetailsServiceImpl implements PetDetailsService {
 
     private final PetRepository petRepository;
+
+    private final ObjectsValidator<Pet> validator;
 
     @Override
     public List<Pet> getAllPets() {
@@ -52,7 +56,8 @@ public class PetDetailsServiceImpl implements PetDetailsService {
 
     @Transactional
     @Override
-    public Pet addPet(Pet pet) {
+    public Pet addPet(Pet pet) throws InvalidShelterIdException {
+        validator.validate(pet);
         if (exists(pet)) {
             throw new DuplicatePetException();
         }

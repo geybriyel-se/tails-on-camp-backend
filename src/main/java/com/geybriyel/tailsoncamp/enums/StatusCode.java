@@ -20,7 +20,7 @@ public enum StatusCode {
     INVALID_USER_ID(HttpStatus.BAD_REQUEST.value(), "Invalid user ID"),
     INVALID_USERNAME(HttpStatus.BAD_REQUEST.value(), "Invalid username"),
 
-    LIST_EMPTY(HttpStatus.NOT_FOUND.value(), "The list is empty"),
+    LIST_EMPTY(HttpStatus.NOT_FOUND.value(), "The list is empty. No records found"),
 
     INVALID_PET_ID(HttpStatus.BAD_REQUEST.value(), "Invalid pet ID"),
     INVALID_BREED(HttpStatus.BAD_REQUEST.value(), "No pets of the specified breed was found."),
