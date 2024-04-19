@@ -123,4 +123,92 @@ public class AdoptionRequestController {
                 .collect(Collectors.toList());
     }
 
+    @PostMapping("/approve")
+    public ApiResponse<Object> approveRequest(@RequestBody Long requestId) {
+        try {
+            AdoptionRequest adoptionRequest = adoptionRequestService.approveRequest(requestId);
+            AdoptionRequestResponseDTO responseDTO = buildAdoptionResponseDtoFromAdoptionObject(adoptionRequest);
+            return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
+        } catch (InvalidAdoptionRequestIdException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
+        } catch (PetNotAvailableException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
+        } catch (AnotherReqUndergoingFinalizationException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
+        } catch (Exception e) {
+            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @PostMapping("/reject")
+    public ApiResponse<Object> rejectRequest(@RequestBody Long requestId) {
+        try {
+            AdoptionRequest adoptionRequest = adoptionRequestService.rejectRequest(requestId);
+            AdoptionRequestResponseDTO responseDTO = buildAdoptionResponseDtoFromAdoptionObject(adoptionRequest);
+            return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
+        } catch (InvalidAdoptionRequestIdException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
+        } catch (Exception e) {
+            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @PostMapping("/cancel")
+    public ApiResponse<Object> cancelRequest(@RequestBody Long requestId) {
+        try {
+            AdoptionRequest adoptionRequest = adoptionRequestService.cancelRequest(requestId);
+            AdoptionRequestResponseDTO responseDTO = buildAdoptionResponseDtoFromAdoptionObject(adoptionRequest);
+            return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
+        } catch (InvalidAdoptionRequestIdException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
+        } catch (Exception e) {
+            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @PostMapping("/hold")
+    public ApiResponse<Object> holdRequest(@RequestBody Long requestId) {
+        try {
+            AdoptionRequest adoptionRequest = adoptionRequestService.holdRequest(requestId);
+            AdoptionRequestResponseDTO responseDTO = buildAdoptionResponseDtoFromAdoptionObject(adoptionRequest);
+            return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
+        } catch (InvalidAdoptionRequestIdException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
+        } catch (Exception e) {
+            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @PostMapping("/complete")
+    public ApiResponse<Object> completeRequest(@RequestBody Long requestId) {
+        try {
+            AdoptionRequest adoptionRequest = adoptionRequestService.completeRequest(requestId);
+            AdoptionRequestResponseDTO responseDTO = buildAdoptionResponseDtoFromAdoptionObject(adoptionRequest);
+            return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
+        } catch (InvalidAdoptionRequestIdException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
+        } catch (PetNotAvailableException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
+        } catch (RequestNotApprovedException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
+        } catch (RejectedAdoptionRequestException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
+        } catch (Exception e) {
+            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @PostMapping("/close")
+    public ApiResponse<Object> closeRequest(@RequestBody Long requestId) {
+        try {
+            AdoptionRequest adoptionRequest = adoptionRequestService.closeRequest(requestId);
+            AdoptionRequestResponseDTO responseDTO = buildAdoptionResponseDtoFromAdoptionObject(adoptionRequest);
+            return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
+        } catch (InvalidAdoptionRequestIdException e) {
+            return new ApiResponse<>(e.getStatusCode(), null);
+        } catch (Exception e) {
+            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
 }

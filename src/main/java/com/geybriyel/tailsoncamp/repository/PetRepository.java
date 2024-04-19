@@ -33,7 +33,7 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
 
     /**
      *
-     * @param availability 1: available 0: not available
+     * @param availability 0: not available / already adopted, 1: available 2: on-hold
      * @return
      */
     List<Pet> findByAvailability(Integer availability);

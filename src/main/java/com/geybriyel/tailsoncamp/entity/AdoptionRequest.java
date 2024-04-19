@@ -1,5 +1,6 @@
 package com.geybriyel.tailsoncamp.entity;
 
+import com.geybriyel.tailsoncamp.enums.AdoptionRequestStatus;
 import com.geybriyel.tailsoncamp.listener.AdoptionRequestEntityListener;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -24,7 +25,8 @@ public class AdoptionRequest {
     @JoinColumn(name = "adopter_id", referencedColumnName = "user_id")
     private User adopter;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private AdoptionRequestStatus status;
 
     private Instant createdAt;
 

@@ -3,6 +3,7 @@ package com.geybriyel.tailsoncamp.service;
 import com.geybriyel.tailsoncamp.entity.AdoptionRequest;
 import com.geybriyel.tailsoncamp.entity.Pet;
 import com.geybriyel.tailsoncamp.entity.User;
+import com.geybriyel.tailsoncamp.enums.AdoptionRequestStatus;
 
 import java.util.List;
 
@@ -22,8 +23,21 @@ public interface AdoptionRequestService {
      * @param adoptionRequest
      * @return true if request already exists
      */
-    boolean exists(AdoptionRequest adoptionRequest);
+    boolean existsRequestByUserToPet(AdoptionRequest adoptionRequest);
+
+    AdoptionRequest getAdoptionRequestByUserAndPet(AdoptionRequest adoptionRequest);
 
     AdoptionRequest saveRequest(AdoptionRequest adoptionRequest);
 
+    AdoptionRequest approveRequest(Long requestId);
+
+    AdoptionRequest rejectRequest(Long requestId);
+
+    AdoptionRequest cancelRequest(Long requestId);
+
+    AdoptionRequest holdRequest(Long requestId);
+
+    AdoptionRequest completeRequest(Long requestId);
+
+    AdoptionRequest closeRequest(Long requestId);
 }

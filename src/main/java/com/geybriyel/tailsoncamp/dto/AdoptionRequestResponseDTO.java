@@ -2,6 +2,7 @@ package com.geybriyel.tailsoncamp.dto;
 
 import com.geybriyel.tailsoncamp.entity.Pet;
 import com.geybriyel.tailsoncamp.entity.User;
+import com.geybriyel.tailsoncamp.enums.AdoptionRequestStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,7 +16,7 @@ public class AdoptionRequestResponseDTO {
 
     private UserResponseDTO adopter;
 
-    private String status;
+    private AdoptionRequestStatus status;
 
     private Instant createdAt;
 

@@ -34,7 +34,11 @@ public enum StatusCode {
 
     INVALID_ADOPTION_REQUEST_ID(HttpStatus.BAD_REQUEST.value(), "Invalid adoption request ID"),
     DUPLICATE_ADOPTION_REQUEST(HttpStatus.CONFLICT.value(), "Adoption request has already been created"),
-    PET_NOT_AVAILABLE(HttpStatus.CONFLICT.value(), "Pet is not available for adoption"),
+    PET_NOT_AVAILABLE(HttpStatus.CONFLICT.value(), "Not available. Pet is already adopted."),
+    PET_ON_HOLD(HttpStatus.CONFLICT.value(), "Request on hold. Request from another user is currently being finalized"),
+    REJECTED_ADOPTION_REQUEST(HttpStatus.CONFLICT.value(), "Cannot proceed. Adoption request for pet was already rejected."),
+    UNDERGOING_FINALIZATION(HttpStatus.CONFLICT.value(), "Cannot approve. Request from another user is already approved and undergoing finalization."),
+    ADOPTION_REQUEST_NOT_APPROVED(HttpStatus.CONFLICT.value(), "Request must be approved first before proceeding."),
 
     SUCCESS(HttpStatus.OK.value(), "Success"),
     USER_CREATED(HttpStatus.CREATED.value(), "User created successfully"),

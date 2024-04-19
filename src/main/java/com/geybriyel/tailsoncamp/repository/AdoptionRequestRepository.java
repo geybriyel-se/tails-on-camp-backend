@@ -24,4 +24,5 @@ public interface AdoptionRequestRepository extends JpaRepository<AdoptionRequest
 
     boolean existsByAdopterAndPet(User user, Pet pet);
 
+    AdoptionRequest findAdoptionRequestByAdopterAndPet(User user, Pet pet);
 }
