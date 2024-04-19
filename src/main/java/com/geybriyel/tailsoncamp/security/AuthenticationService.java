@@ -4,6 +4,8 @@ import com.geybriyel.tailsoncamp.dto.LoginUserRequestDTO;
 import com.geybriyel.tailsoncamp.dto.RegisterUserRequestDTO;
 import com.geybriyel.tailsoncamp.entity.User;
 import com.geybriyel.tailsoncamp.enums.Role;
+import com.geybriyel.tailsoncamp.enums.StatusCode;
+import com.geybriyel.tailsoncamp.exception.UserRegistrationException;
 import com.geybriyel.tailsoncamp.service.impl.UserDetailsServiceImpl;
 import com.geybriyel.tailsoncamp.validator.ObjectsValidator;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,14 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse register(RegisterUserRequestDTO request) {
+        if (userDetailsService.isUsernameTaken(request.getUsername())) {
+            throw new UserRegistrationException(StatusCode.USERNAME_NOT_UNIQUE);
+        }
+
+        if (userDetailsService.isEmailTaken(request.getEmail())) {
+            throw new UserRegistrationException(StatusCode.EMAIL_NOT_UNIQUE);
+        }
+
         User user = new User();
         user.setEmail(request.getEmail());
         user.setUsername(request.getUsername());

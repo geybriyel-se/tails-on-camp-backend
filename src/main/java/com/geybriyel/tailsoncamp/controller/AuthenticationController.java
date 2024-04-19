@@ -5,6 +5,7 @@ import com.geybriyel.tailsoncamp.dto.LoginUserRequestDTO;
 import com.geybriyel.tailsoncamp.dto.RegisterUserRequestDTO;
 import com.geybriyel.tailsoncamp.enums.StatusCode;
 import com.geybriyel.tailsoncamp.exception.ObjectNotValidException;
+import com.geybriyel.tailsoncamp.exception.UserRegistrationException;
 import com.geybriyel.tailsoncamp.security.AuthenticationResponse;
 import com.geybriyel.tailsoncamp.security.AuthenticationService;
 import com.geybriyel.tailsoncamp.security.JwtService;
@@ -33,8 +34,7 @@ public class AuthenticationController {
             return new ApiResponse<>(StatusCode.USER_CREATED, token);
         } catch (ObjectNotValidException exception) {
             return new ApiResponse<>(exception.getStatusCode(), exception.getViolations());
-        }
-/*        catch (UserRegistrationException exception) {
+        } catch (UserRegistrationException exception) {
             StatusCode exceptionStatusCode = exception.getStatusCode();
             if (exceptionStatusCode == StatusCode.EMAIL_NOT_UNIQUE || exceptionStatusCode == StatusCode.USERNAME_NOT_UNIQUE) {
                 return new ApiResponse<>(exceptionStatusCode, null);
@@ -42,7 +42,7 @@ public class AuthenticationController {
                 log.error("An unexpected error occurred during user registration", exception);
                 return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, null);
             }
-        }*/
+        }
     }
 
 
