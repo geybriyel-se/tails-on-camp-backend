@@ -52,6 +52,9 @@ public class User implements UserDetails {
 
     private Instant updatedAt;
 
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
+
     @Enumerated(value = EnumType.STRING)
     private Role role;
 

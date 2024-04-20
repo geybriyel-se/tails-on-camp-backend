@@ -1,10 +1,12 @@
 package com.geybriyel.tailsoncamp.security;
 
 import com.geybriyel.tailsoncamp.entity.User;
+import com.geybriyel.tailsoncamp.repository.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,13 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
     @Value("${jwt.secret.key}")
     private String SECRET_KEY;
+
+    private final TokenRepository tokenRepository;
 
     private Claims extractAllClaims(String token) {
         return Jwts
@@ -46,7 +51,11 @@ public class JwtService {
 
     public boolean isValid(String token, UserDetails user) {
         String username = extractUsername(token);
-        return username.equals(user.getUsername()) && !isTokenExpired(token);
+
+        Boolean isValidToken = tokenRepository.findByToken(token)
+                .map(t -> !t.isLoggedOut()).orElse(false);
+
+        return username.equals(user.getUsername()) && !isTokenExpired(token) && isValidToken;
     }
 
     private boolean isTokenExpired(String token) {
