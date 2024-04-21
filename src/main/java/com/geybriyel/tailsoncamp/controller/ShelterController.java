@@ -5,7 +5,6 @@ import com.geybriyel.tailsoncamp.dto.ShelterDetailsRequestDTO;
 import com.geybriyel.tailsoncamp.dto.ShelterDetailsResponseDTO;
 import com.geybriyel.tailsoncamp.entity.Shelter;
 import com.geybriyel.tailsoncamp.enums.StatusCode;
-import com.geybriyel.tailsoncamp.exception.*;
 import com.geybriyel.tailsoncamp.service.ShelterDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -30,90 +29,52 @@ public class ShelterController {
 
     @GetMapping("/id")
     public ApiResponse<ShelterDetailsResponseDTO> retrieveShelterById(@RequestBody Long id) {
-        try {
-            Shelter shelterByShelterId = shelterService.getShelterByShelterId(id);
-            ShelterDetailsResponseDTO responseDTO = buildShelterResDtoFromShelterObject(shelterByShelterId);
-            return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
-        } catch (InvalidShelterIdException e) {
-            return new ApiResponse<>(e.getStatusCode(), null);
-        } catch (Exception e) {
-            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+        Shelter shelterByShelterId = shelterService.getShelterByShelterId(id);
+        ShelterDetailsResponseDTO responseDTO = buildShelterResDtoFromShelterObject(shelterByShelterId);
+        return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
     }
 
     @GetMapping("/city")
     public ApiResponse<List<ShelterDetailsResponseDTO>> retrieveSheltersByCity(@RequestBody String city) {
-        try {
-            List<Shelter> sheltersByCity = shelterService.getSheltersByCity(city);
-            if (sheltersByCity.isEmpty()) {
-                return new ApiResponse<>(StatusCode.LIST_EMPTY, sheltersByCity);
-            }
-            List<ShelterDetailsResponseDTO> responseDTOList = buildListShelterResDtoFromShelterList(sheltersByCity);
-            return new ApiResponse<>(StatusCode.SUCCESS, responseDTOList);
-        } catch (InvalidCityException e) {
-            return new ApiResponse<>(e.getStatusCode(), null);
-        } catch (Exception e) {
-            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        List<Shelter> sheltersByCity = shelterService.getSheltersByCity(city);
+        if (sheltersByCity.isEmpty()) {
+            return new ApiResponse<>(StatusCode.LIST_EMPTY, sheltersByCity);
         }
+        List<ShelterDetailsResponseDTO> responseDTOList = buildListShelterResDtoFromShelterList(sheltersByCity);
+        return new ApiResponse<>(StatusCode.SUCCESS, responseDTOList);
     }
 
     @GetMapping("/province")
     public ApiResponse<List<ShelterDetailsResponseDTO>> retrieveSheltersByProvince(@RequestBody String province) {
-        try {
-            List<Shelter> sheltersByProvince = shelterService.getSheltersByProvince(province);
-            if (sheltersByProvince.isEmpty()) {
-                return new ApiResponse<>(StatusCode.LIST_EMPTY, null);
-            }
-            List<ShelterDetailsResponseDTO> responseDTOList = buildListShelterResDtoFromShelterList(sheltersByProvince);
-            return new ApiResponse<>(StatusCode.SUCCESS, responseDTOList);
-        } catch (InvalidProvinceException e) {
-            return new ApiResponse<>(e.getStatusCode(), null);
-        } catch (Exception e) {
-            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        List<Shelter> sheltersByProvince = shelterService.getSheltersByProvince(province);
+        if (sheltersByProvince.isEmpty()) {
+            return new ApiResponse<>(StatusCode.LIST_EMPTY, null);
         }
+        List<ShelterDetailsResponseDTO> responseDTOList = buildListShelterResDtoFromShelterList(sheltersByProvince);
+        return new ApiResponse<>(StatusCode.SUCCESS, responseDTOList);
     }
 
     @GetMapping("/name")
     public ApiResponse<ShelterDetailsResponseDTO> retrieveShelterByShelterName(@RequestBody String shelterName) {
-        try {
-            Shelter shelterByShelterName = shelterService.getShelterByShelterName(shelterName);
-            ShelterDetailsResponseDTO responseDTO = buildShelterResDtoFromShelterObject(shelterByShelterName);
-            return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
-        } catch (InvalidShelterNameException e) {
-            return new ApiResponse<>(e.getStatusCode(), null);
-        } catch (Exception e) {
-            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+        Shelter shelterByShelterName = shelterService.getShelterByShelterName(shelterName);
+        ShelterDetailsResponseDTO responseDTO = buildShelterResDtoFromShelterObject(shelterByShelterName);
+        return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
     }
 
     @PostMapping("/register")
     public ApiResponse<ShelterDetailsResponseDTO> registerShelter(@RequestBody ShelterDetailsRequestDTO shelterDetailsRequestDTO) {
         Shelter shelter = buildShelterObjectFromReqDto(shelterDetailsRequestDTO);
-        try {
-            Shelter savedShelter = shelterService.addShelter(shelter);
-            ShelterDetailsResponseDTO responseDTO = buildShelterResDtoFromShelterObject(savedShelter);
-            return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
-        } catch (ObjectNotValidException e) {
-            return new ApiResponse<>(e.getStatusCode(), e.getViolations());
-        } catch (DuplicateShelterException e) {
-            return new ApiResponse<>(e.getStatusCode(), null);
-        } catch (Exception e) {
-            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+        Shelter savedShelter = shelterService.addShelter(shelter);
+        ShelterDetailsResponseDTO responseDTO = buildShelterResDtoFromShelterObject(savedShelter);
+        return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
     }
 
     @PostMapping("/update")
     public ApiResponse<ShelterDetailsResponseDTO> updateShelterDetails(@RequestBody ShelterDetailsRequestDTO shelterDetailsRequestDTO) {
         Shelter shelter = buildShelterObjectFromReqDto(shelterDetailsRequestDTO);
-        try {
-            Shelter updatedShelter = shelterService.updateShelter(shelter);
-            ShelterDetailsResponseDTO responseDTO = buildShelterResDtoFromShelterObject(updatedShelter);
-            return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
-        } catch (InvalidShelterIdException e) {
-            return new ApiResponse<>(e.getStatusCode(), null);
-        } catch (Exception e) {
-            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+        Shelter updatedShelter = shelterService.updateShelter(shelter);
+        ShelterDetailsResponseDTO responseDTO = buildShelterResDtoFromShelterObject(updatedShelter);
+        return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
     }
 
     @GetMapping("/all-city")

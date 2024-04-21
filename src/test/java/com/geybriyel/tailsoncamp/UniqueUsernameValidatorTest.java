@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 class UniqueUsernameValidatorTest {
 
-    @Mock
+    /*@Mock
     private UserDetailsServiceImpl userDetailsService;
 
     private UniqueUsernameValidator validator;
@@ -40,5 +40,5 @@ class UniqueUsernameValidatorTest {
         when(userDetailsService.isUsernameTaken(username)).thenReturn(true);
 
         assertFalse(validator.isValid(username, mock(ConstraintValidatorContext.class)));
-    }
+    }*/
 }

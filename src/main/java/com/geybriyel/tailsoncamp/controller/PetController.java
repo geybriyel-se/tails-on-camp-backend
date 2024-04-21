@@ -6,13 +6,8 @@ import com.geybriyel.tailsoncamp.dto.PetDetailsResponseDTO;
 import com.geybriyel.tailsoncamp.entity.Pet;
 import com.geybriyel.tailsoncamp.entity.Shelter;
 import com.geybriyel.tailsoncamp.enums.StatusCode;
-import com.geybriyel.tailsoncamp.exception.DuplicatePetException;
-import com.geybriyel.tailsoncamp.exception.InvalidBreedException;
-import com.geybriyel.tailsoncamp.exception.InvalidPetIdException;
-import com.geybriyel.tailsoncamp.exception.ObjectNotValidException;
 import com.geybriyel.tailsoncamp.service.PetDetailsService;
 import com.geybriyel.tailsoncamp.service.ShelterDetailsService;
-import com.geybriyel.tailsoncamp.utils.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +25,6 @@ import static com.geybriyel.tailsoncamp.mapper.PetMapper.*;
 public class PetController {
 
     private final PetDetailsService petService;
-
     private final ShelterDetailsService shelterService;
 
     @GetMapping("/all")
@@ -40,54 +34,33 @@ public class PetController {
             return new ApiResponse<>(StatusCode.LIST_EMPTY, allPets);
         }
         List<PetDetailsResponseDTO> petsList = buildListPetResponseDtoFromPetList(allPets);
-        log.info("logged in user: {}", SecurityUtils.getLoggedInUser());
         return new ApiResponse<>(StatusCode.SUCCESS, petsList);
     }
 
     @GetMapping("/id")
     public ApiResponse<PetDetailsResponseDTO> retrievePetById(@RequestBody Long id) {
-        try {
-            Pet petByPetId = petService.getPetByPetId(id);
-            PetDetailsResponseDTO petDto = buildPetResponseDtoFromPetObject(petByPetId);
-            return new ApiResponse<>(StatusCode.SUCCESS, petDto);
-        } catch (InvalidPetIdException exception) {
-            return new ApiResponse<>(exception.getStatusCode(), null);
-        } catch (Exception e) {
-            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+        Pet petByPetId = petService.getPetByPetId(id);
+        PetDetailsResponseDTO petDto = buildPetResponseDtoFromPetObject(petByPetId);
+        return new ApiResponse<>(StatusCode.SUCCESS, petDto);
     }
 
     @GetMapping("/breed")
     public ApiResponse<List<PetDetailsResponseDTO>> retrievePetsByBreed(@RequestBody String breed) {
-        try {
-            List<Pet> petsByBreed = petService.getPetsByBreed(breed);
-            if (petsByBreed.isEmpty()) {
-                return new ApiResponse<>(StatusCode.LIST_EMPTY, petsByBreed);
-            }
-            List<PetDetailsResponseDTO> petsList = buildListPetResponseDtoFromPetList(petsByBreed);
-            return new ApiResponse<>(StatusCode.SUCCESS, petsList);
-        } catch (InvalidBreedException e) {
-            return new ApiResponse<>(e.getStatusCode(), null);
-        } catch (Exception e) {
-            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        List<Pet> petsByBreed = petService.getPetsByBreed(breed);
+        if (petsByBreed.isEmpty()) {
+            return new ApiResponse<>(StatusCode.LIST_EMPTY, petsByBreed);
         }
+        List<PetDetailsResponseDTO> petsList = buildListPetResponseDtoFromPetList(petsByBreed);
+        return new ApiResponse<>(StatusCode.SUCCESS, petsList);
     }
 
     @PostMapping("/register")
     public ApiResponse<PetDetailsResponseDTO> registerPet(@Valid @RequestBody PetDetailsRequestDTO petDetailsRequestDTO) {
         Shelter shelter = shelterService.getShelterByShelterId(petDetailsRequestDTO.getShelterId());
         Pet pet = buildPetFromPetRequestDto(petDetailsRequestDTO, shelter);
-        try {
-            Pet addedPet = petService.addPet(pet);
-            PetDetailsResponseDTO petResponse = buildPetResponseDtoFromPetObject(addedPet);
-            return new ApiResponse<>(StatusCode.SUCCESS, petResponse);
-        } catch (ObjectNotValidException e) {
-            return new ApiResponse<>(e.getStatusCode(), e.getViolations());
-        } catch (DuplicatePetException e) {
-            return new ApiResponse<>(e.getStatusCode(), null);
-        } catch (Exception e) {
-            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+        Pet addedPet = petService.addPet(pet);
+        PetDetailsResponseDTO petResponse = buildPetResponseDtoFromPetObject(addedPet);
+        return new ApiResponse<>(StatusCode.SUCCESS, petResponse);
     }
 
 
@@ -95,15 +68,9 @@ public class PetController {
     public ApiResponse<PetDetailsResponseDTO> updatePetDetails(@RequestBody PetDetailsRequestDTO pet) {
         Shelter shelter = shelterService.getShelterByShelterId(pet.getShelterId());
         Pet petToUpdate = buildPetFromPetRequestDto(pet, shelter);
-        try {
-            Pet updatedPet = petService.updatePet(petToUpdate);
-            PetDetailsResponseDTO petResponse = buildPetResponseDtoFromPetObject(updatedPet);
-            return new ApiResponse<>(StatusCode.SUCCESS, petResponse);
-        } catch (InvalidPetIdException e) {
-            return new ApiResponse<>(e.getStatusCode(), null);
-        } catch (Exception e) {
-            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+        Pet updatedPet = petService.updatePet(petToUpdate);
+        PetDetailsResponseDTO petResponse = buildPetResponseDtoFromPetObject(updatedPet);
+        return new ApiResponse<>(StatusCode.SUCCESS, petResponse);
     }
 
     /**
