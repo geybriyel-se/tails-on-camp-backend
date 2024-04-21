@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.geybriyel</groupId>
 	<artifactId>tails-on-camp</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>tails-on-camp</name>
 	<description>Designed to power a pet adoption platform&apos;s backend functionality.</description>
 	<properties>
