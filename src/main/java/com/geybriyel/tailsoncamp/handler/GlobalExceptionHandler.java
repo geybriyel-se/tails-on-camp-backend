@@ -1,10 +1,12 @@
 package com.geybriyel.tailsoncamp.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.geybriyel.tailsoncamp.dto.ApiResponse;
 import com.geybriyel.tailsoncamp.enums.StatusCode;
 import com.geybriyel.tailsoncamp.exception.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
+import kong.unirest.UnirestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -124,6 +126,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RejectedAdoptionRequestException.class)
     public ApiResponse<Object> handleRejectedAdoptionRequestException(RejectedAdoptionRequestException e) {
         return new ApiResponse<>(e.getStatusCode(), null);
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    public ApiResponse<Object> handleJsonProcessingException(JsonProcessingException e) {
+        return new ApiResponse<>(StatusCode.JSON_PARSE_ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ApiResponse<Object> handleIllegalArgumentException(IllegalArgumentException e) {
+        return new ApiResponse<>(StatusCode.BAD_REQUEST, e.getMessage());
     }
 
 }
