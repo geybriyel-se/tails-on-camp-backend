@@ -8,6 +8,7 @@ import com.geybriyel.tailsoncamp.enums.StatusCode;
 import com.geybriyel.tailsoncamp.mapper.UserMapper;
 import com.geybriyel.tailsoncamp.service.impl.UserDetailsServiceImpl;
 import com.geybriyel.tailsoncamp.utils.SecurityUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ public class UserController {
 
     private final UserDetailsServiceImpl userDetailsService;
 
+    @Operation(summary = "Retrieve all users")
     @GetMapping("/all")
     public ApiResponse<List<UserResponseDTO>> retrieveAllUsers() {
         List<User> allUsers = userDetailsService.getAllUsers();
@@ -34,6 +36,7 @@ public class UserController {
         return new ApiResponse<>(StatusCode.SUCCESS, responseDTOS);
     }
 
+    @Operation(summary = "Retrieve a user by their ID")
     @GetMapping("/id")
     public ApiResponse<UserResponseDTO> retrieveUserById(@RequestBody Long id) {
         User userById = userDetailsService.getUserById(id);
@@ -41,6 +44,7 @@ public class UserController {
         return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
     }
 
+    @Operation(summary = "Retrieve a user by their username")
     @GetMapping("/username")
     public ApiResponse<UserResponseDTO> retrieveUserByUsername(@RequestBody String username) {
         User user = userDetailsService.loadUserByUsername(username);
@@ -50,6 +54,7 @@ public class UserController {
         return new ApiResponse<>(StatusCode.SUCCESS, responseDTO);
     }
 
+    @Operation(summary = "Update an existing user's details")
     @PostMapping("/update")
     public ApiResponse<UserResponseDTO> updateUser(@RequestBody UserRequestDTO user) {
         User userToSave = buildUserObjectFromRequestDto(user);

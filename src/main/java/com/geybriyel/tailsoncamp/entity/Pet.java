@@ -36,6 +36,9 @@ public class Pet {
 
     private String imageUrl;
 
+    /**
+     * 0: not available / already adopted, 1: available 2: on-hold
+     */
     @Column(columnDefinition = "INTEGER DEFAULT 1")
     private Integer availability;
 

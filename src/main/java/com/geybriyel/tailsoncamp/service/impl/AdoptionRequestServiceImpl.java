@@ -80,6 +80,7 @@ public class AdoptionRequestServiceImpl implements AdoptionRequestService {
 
         if (requestByUserAndPet.getStatus().equals(AdoptionRequestStatus.REJECTED)) {
             log.info("An existing request by user to the same pet was already rejected.");
+            rejectRequest(requestByUserAndPet.getAdoptionId());
             throw new RejectedAdoptionRequestException();
         } else {
             throw new DuplicateAdoptionRequestException();
@@ -98,6 +99,8 @@ public class AdoptionRequestServiceImpl implements AdoptionRequestService {
         requestList.forEach(req -> {
             AdoptionRequestStatus status = req.getStatus();
             if (status.equals(AdoptionRequestStatus.APPROVED)) {
+                holdRequest(requestId);
+                log.info("Request put on hold. Another request in undergoing finalization.");
                 throw new AnotherReqUndergoingFinalizationException();
             }
 

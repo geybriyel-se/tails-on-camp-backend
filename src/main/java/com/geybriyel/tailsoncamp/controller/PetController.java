@@ -8,6 +8,7 @@ import com.geybriyel.tailsoncamp.entity.Shelter;
 import com.geybriyel.tailsoncamp.enums.StatusCode;
 import com.geybriyel.tailsoncamp.service.PetDetailsService;
 import com.geybriyel.tailsoncamp.service.ShelterDetailsService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class PetController {
     private final PetDetailsService petService;
     private final ShelterDetailsService shelterService;
 
+    @Operation(summary = "Retrieve all pets in the database")
     @GetMapping("/all")
     public ApiResponse<List<PetDetailsResponseDTO>> retrieveAllPets() {
         List<Pet> allPets = petService.getAllPets();
@@ -37,6 +39,7 @@ public class PetController {
         return new ApiResponse<>(StatusCode.SUCCESS, petsList);
     }
 
+    @Operation(summary = "Retrieve a pet by its ID")
     @GetMapping("/id")
     public ApiResponse<PetDetailsResponseDTO> retrievePetById(@RequestBody Long id) {
         Pet petByPetId = petService.getPetByPetId(id);
@@ -44,6 +47,7 @@ public class PetController {
         return new ApiResponse<>(StatusCode.SUCCESS, petDto);
     }
 
+    @Operation(summary = "Retrieve all pets in the database by its breed")
     @GetMapping("/breed")
     public ApiResponse<List<PetDetailsResponseDTO>> retrievePetsByBreed(@RequestBody String breed) {
         List<Pet> petsByBreed = petService.getPetsByBreed(breed);
@@ -54,6 +58,10 @@ public class PetController {
         return new ApiResponse<>(StatusCode.SUCCESS, petsList);
     }
 
+    @Operation(
+            summary = "Register a new pet",
+            description = "Duplicate pets will not be added to the database."
+    )
     @PostMapping("/register")
     public ApiResponse<PetDetailsResponseDTO> registerPet(@Valid @RequestBody PetDetailsRequestDTO petDetailsRequestDTO) {
         Shelter shelter = shelterService.getShelterByShelterId(petDetailsRequestDTO.getShelterId());
@@ -63,7 +71,7 @@ public class PetController {
         return new ApiResponse<>(StatusCode.SUCCESS, petResponse);
     }
 
-
+    @Operation(summary = "Update the details of the pet")
     @PostMapping("/update")
     public ApiResponse<PetDetailsResponseDTO> updatePetDetails(@RequestBody PetDetailsRequestDTO pet) {
         Shelter shelter = shelterService.getShelterByShelterId(pet.getShelterId());
@@ -73,15 +81,11 @@ public class PetController {
         return new ApiResponse<>(StatusCode.SUCCESS, petResponse);
     }
 
-    /**
-     * @return A List of Strings that contains all the distinct pet breeds in the database
-     */
+    @Operation(summary = "Retrieve all the breeds of the pets present in the database")
     @GetMapping("/all-breeds")
     public ApiResponse<Set<String>> retrieveAllBreeds() {
         List<String> allPetBreeds = petService.getAllPetBreeds();
         return new ApiResponse<>(StatusCode.SUCCESS, allPetBreeds);
     }
-
-
 
 }
