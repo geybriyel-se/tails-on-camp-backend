@@ -16,7 +16,7 @@ import static com.geybriyel.tailsoncamp.mapper.ShelterMapper.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/shelters")
+@RequestMapping("/shelters")
 public class ShelterController {
 
     private final ShelterDetailsService shelterService;

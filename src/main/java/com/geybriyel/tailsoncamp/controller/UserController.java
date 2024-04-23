@@ -19,7 +19,7 @@ import static com.geybriyel.tailsoncamp.mapper.UserMapper.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/v1/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 

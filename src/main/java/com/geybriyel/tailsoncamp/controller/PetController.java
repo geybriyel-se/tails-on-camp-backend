@@ -21,7 +21,7 @@ import static com.geybriyel.tailsoncamp.mapper.PetMapper.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/v1/pets")
+@RequestMapping("/pets")
 @RequiredArgsConstructor
 public class PetController {
 

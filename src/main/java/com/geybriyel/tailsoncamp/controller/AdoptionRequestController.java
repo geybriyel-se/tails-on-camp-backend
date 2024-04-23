@@ -22,7 +22,7 @@ import static com.geybriyel.tailsoncamp.mapper.PetMapper.buildListPetResponseDto
 import static com.geybriyel.tailsoncamp.mapper.UserMapper.buildListUserResponseDtoFromUserList;
 
 @RestController
-@RequestMapping("/v1/adoptions")
+@RequestMapping("/adoptions")
 @RequiredArgsConstructor
 @Slf4j
 public class AdoptionRequestController {
