@@ -11,6 +11,8 @@ public enum StatusCode {
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "Resource not found"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error. An error occurred while retrieving the data"),
     JSON_PARSE_ERROR(HttpStatus.BAD_REQUEST.value(), "Error parsing the JSON object"),
+    EXPIRED_JWT(HttpStatus.UNAUTHORIZED.value(), "The provided JWT has expired"),
+
     USERNAME_NOT_UNIQUE(HttpStatus.CONFLICT.value(), "Username is already taken"),
     INCORRECT_CREDENTIALS(HttpStatus.UNAUTHORIZED.value(), "Login failed. The provided username and/or password is incorrect"),
     EMAIL_NOT_UNIQUE(HttpStatus.CONFLICT.value(), "Email address is already in use"),

@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
         if (exceptionStatusCode == StatusCode.EMAIL_NOT_UNIQUE || exceptionStatusCode == StatusCode.USERNAME_NOT_UNIQUE) {
             return new ApiResponse<>(exceptionStatusCode, null);
         } else {
-            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, null);
+            return new ApiResponse<>(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ApiResponse<Object> handleUsernameNotFoundException(UsernameNotFoundException e) {
-        return new ApiResponse<>(StatusCode.USER_DOES_NOT_EXIST, e.getMessage());
+        return new ApiResponse<>(StatusCode.USER_DOES_NOT_EXIST, null);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidCityException.class)
     public ApiResponse<Object> handleInvalidCityException(InvalidCityException e) {
-        return new ApiResponse<>(e.getStatusCode(), null);
+        return new ApiResponse<>(e.getStatusCode(), e.getMessage());
     }
 
     @ExceptionHandler(InvalidProvinceException.class)
@@ -137,5 +137,12 @@ public class GlobalExceptionHandler {
     public ApiResponse<Object> handleIllegalArgumentException(IllegalArgumentException e) {
         return new ApiResponse<>(StatusCode.BAD_REQUEST, e.getMessage());
     }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ApiResponse<Object> handleExpiredJwtException(ExpiredJwtException e) {
+        return new ApiResponse<>(StatusCode.EXPIRED_JWT, null);
+    }
+
+
 
 }
