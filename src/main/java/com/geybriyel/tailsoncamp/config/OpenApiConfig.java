@@ -23,8 +23,12 @@ import io.swagger.v3.oas.annotations.servers.Server;
         ),
         servers = {
                 @Server(
+                        description = "PROD ENV",
+                        url = "54.206.87.91:8080"
+                ),
+                @Server(
                         description = "LOCAL ENV",
-                        url = "http://localhost:9090"
+                        url = "http://localhost:8080"
                 )
         },
         security = {
